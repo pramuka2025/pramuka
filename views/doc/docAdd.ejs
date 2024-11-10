@@ -1,0 +1,21 @@
+<div class="container">
+  <h1>Add New Documentation</h1>
+  <% if (message) { %> <% if (message.status === 'error') { %>
+  <div id="responseMessage" style="color: rgb(244, 77, 77)"><%= message.pesan %></div>
+  <% } else if (message.status === 'success') { %>
+  <div id="responseMessage" style="color: rgb(77, 244, 77)"><%= message.pesan %></div>
+  <% } %> <% } %>
+  <form action="/doc/add" method="post" class="contin" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required />
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" required />
+
+    <button class="mb-3 mt-3 btn btn-success" type="submit">Add Documentation</button>
+  </form>
+  <a class="mt-1" href="/dashboard">Back to Dashboard</a>
+</div>

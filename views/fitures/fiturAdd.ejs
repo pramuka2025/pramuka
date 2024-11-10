@@ -1,0 +1,79 @@
+<div class="container">
+  <h1>Add New Feature</h1>
+  <div id="responseMessage"></div>
+  <form id="featureForm" class="contin" action="/fitures/add" method="post" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required />
+
+    <label for="content">Content:</label>
+    <textarea id="content" name="content"></textarea>
+    <!-- Atribut required dihapus -->
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" required />
+
+    <button class="btn btn-success mt-3 mb-3" type="submit">Add Feature</button>
+  </form>
+  <a class="mt-1" href="/dashboard">Back to Home</a>
+</div>
+<script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+    selector: '#content',
+    plugins: 'lists link image table',
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | table',
+    menubar: true,
+    height: 300,
+  });
+
+  document.getElementById('featureForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Mencegah pengiriman formulir default
+
+    const content = tinymce.get('content').getContent(); // Ambil konten dari TinyMCE
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+
+    // Validasi: Pastikan konten tidak kosong
+    if (!title || !description || !content) {
+      alert('Please fill in all required fields.');
+      return; // Hentikan pengiriman jika ada yang kosong
+    }
+
+    const formData = new FormData(this); // Mengambil data dari formulir
+    formData.set('content', content); // Set konten TinyMCE ke FormData
+
+    try {
+      const response = await fetch('/fitures/add', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      const responseMessage = document.getElementById('responseMessage');
+
+      if (response.ok) {
+        // Tampilkan pesan sukses
+        responseMessage.style.color = 'rgb(77, 244, 77)';
+        responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
+
+        // Kosongkan semua input dan textarea
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        tinymce.get('content').setContent(''); // Kosongkan konten TinyMCE
+        document.getElementById('image').value = ''; // Kosongkan input file (tidak bisa diakses secara langsung)
+      } else {
+        // Tampilkan pesan error
+        responseMessage.style.color = 'rgb(244, 77, 77)';
+        responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      const responseMessage = document.getElementById('responseMessage');
+      responseMessage.style.color = 'rgb (244, 77, 77)';
+      responseMessage.textContent = 'Gagal mengirim data';
+    }
+  });
+</script>

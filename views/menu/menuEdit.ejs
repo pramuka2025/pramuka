@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Edit Menu</h1>
+  <form action="/menu/add" method="POST">
+    <div>Judul :</div>
+    <input type="text" class="mb-1" name="title" placeholder="Judul" value="<%= menu.title %>" />
+    <div>Link :</div>
+    <input type="text" class="mb-1" name="link" placeholder="Link" value="<%= menu.link %>" />
+    <button class="btn btn-success mt-2 mb-2" type="submit">Submit</button>
+  </form>
+
+  <% if (message) { %>
+  <div id="responseMessage" style="color: green"><%= message %></div>
+  <% } %>
+
+  <a href="/dashboard">Back to Dashboard</a>
+</div>

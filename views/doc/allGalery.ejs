@@ -1,0 +1,70 @@
+<div class="container">
+  <!-- Input Pencarian -->
+  <div class="mb-3 d-flex bg-white p-1 w-75 rounded" style="border: 1px solid rgb(0, 0, 0)">
+    <input type="text" id="searchInput" class="form-control shadow-none border-0 p-0 m-0" placeholder="Cari foto..." onkeyup="filterArticles()" />
+    <i class="bi bi-search fw-bold text-dark"></i>
+  </div>
+
+  <section id="galery">
+    <div class="row" data-doc="<%= JSON.stringify(doc) %>" id="data">
+      <% doc.reverse().forEach(dat => {%>
+      <div class="col-6 m-0 p-2 d-flex justify-content-start article-card">
+        <div class="card border-1 border-brown pointer galery-card" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
+          <div class="position-relative">
+            <img src="<%= dat.imageUrl %>" class="card-img-top" style="object-fit: cover; height: 100px" alt="<%= dat.title %>" />
+            <div class="overlay"></div>
+          </div>
+          <div class="card-body m-0 p-0 ps-2 pe-2">
+            <h5 class="card-text text-b m-0 h5-0 text-ellipsis"><%= dat.title %></h5>
+            <p class="card-text text-b m-0 p-0 text-ellipsis text-muted"><%= dat.createdAt %></p>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <!-- Pesan ketika tidak ada data -->
+  <div id="noDataMessage" class="alert alert-warning" style="display: none">Maaf foto yang anda cari tidak ada.</div>
+</div>
+
+<script>
+  function filterArticles() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const dataGalery = document.getElementById('data');
+    const foto = dataGalery.getAttribute('data-doc');
+    const articles = JSON.parse(foto); // Parsing data-doc menjadi objek
+    const filteredArticles = articles.filter((dat) => dat.title.toLowerCase().includes(input)); // Filter berdasarkan title
+
+    // Mengupdate konten di dalam elemen dengan ID 'data'
+    const dataContainer = document.getElementById('data');
+    dataContainer.innerHTML = ''; // Kosongkan konten sebelumnya
+
+    // Jika ada artikel yang cocok, tambahkan ke konten
+    filteredArticles.forEach((dat) => {
+      const articleHTML = `
+        <div class="col-6 m-0 p-2 d-flex justify-content-start article-card">
+          <div class="card border-1 border-brown pointer galery-card" onclick="showModal('${dat.title}', '${dat.description}', '${dat.imageUrl}', '${dat.createdAt}')">
+            <div class="position-relative">
+              <img src="${dat.imageUrl}"  class="card-img-top" style="object-fit: cover; height: 100px" alt="${dat.title}" />
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body m-0 p-0 ps-2 pe-2">
+              <h5 class="card-title text-b m-0 h5-0 text-ellipsis fs-6">${dat.title}</h5>
+              <p class="card-text text-b m-0 p-0 text-ellipsis text-muted">${dat.createdAt}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      dataContainer.innerHTML += articleHTML; // Tambahkan artikel yang cocok ke konten
+    });
+
+    // Menampilkan pesan jika tidak ada data yang cocok
+    const noDataMessage = document.getElementById('noDataMessage');
+    if (filteredArticles.length === 0) {
+      noDataMessage.style.display = 'block';
+    } else {
+      noDataMessage.style.display = 'none';
+    }
+  }
+</script>

@@ -1,0 +1,144 @@
+<header class="w-100">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand text-brown" href="/"><%= landing.title %></a>
+      <button class="navbar-toggler shadow-none injec" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-text-right text-brown"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <hr class="bg-white" style="height: 2px" />
+        <ul class="navbar-nav d-flex justify-content-between w-100 ">
+          <div class="d-md-flex">     
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/galery" id="login">Galery</a>
+            </li>
+          </div>
+          <div>
+            <% if (!user || user.token === null) { %>
+              
+              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginstatic">Login</a>
+          <% } else { %>
+              <form action="/api/auth/logout" method="POST" style="display:inline;">
+                  <button class="nav-link border-0 shadow-none bg-dark p-0 m-0" type="submit">Logout</button>
+              </form>
+          <% } %>
+        </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<div class="container">
+<nav aria-label="breadcrumb" class="<%= isRoot ? 'd-none' : 'd-block' %> mt-2">
+  <ol class="breadcrumb">
+    <% if (breadcrumb) { %>
+      <% breadcrumb.forEach((item, index) => { %>
+        <li class="breadcrumb-item <%= index === breadcrumb.length - 1 ? 'active' : '' %>" 
+            <%= index === breadcrumb.length - 1 ? 'aria-current="page"' : '' %>>
+          <% if (index < breadcrumb.length - 1) { %>
+            <a class="text-b" href="<%= item.url %>"><%= item.name %></a>
+          <% } else { %>
+            <a class="text-b text-secondary " href="<%= item.url %>"><%= item.name %></a>
+          <% } %>
+        </li>
+      <% }); %>
+    <% } %>
+  </ol>
+</nav>
+</div>
+</header>
+
+<!-- Modal -->
+<div class="modal fade" id="loginstatic" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginstaticLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title" id="loginstaticLabel"><%= landing.title %></h5>
+        <button type="button" class="btn border-1 border-danger" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg text-danger fw-bold"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="container d-flex justify-content-center align-items-center ">
+          <div class="bg-dark p-4 rounded shadow">
+              <h2 class="text-center text-white">Login</h2>
+              <div id="response-message" class="text-white"></div> <!-- Elemen untuk menampilkan pesan respons -->
+
+              <form id="login-form" action="/api/auth/login" method="POST">
+                
+                  <div class="form-group">
+                      <label for="email" class="text-white">Email</label>
+                      <input type="email" name="email" class="form-control bg-dark text-white" id="email" placeholder="Masukkan email" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="password" class="text-white">Password</label>
+                      <input type="password" name="password" class="form-control bg-dark text-white" id="password" placeholder="Masukkan password" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block mt-2">Login</button>
+              </form>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', function () {
+    // Mendapatkan elemen tombol
+    const toggleButton = document.querySelector('.navbar-toggler');
+
+    // Mendapatkan nilai aria-expanded
+    const ariaExpanded = toggleButton.getAttribute('aria-expanded');
+
+    // Menentukan HTML yang akan dimasukkan berdasarkan nilai aria-expanded
+    let iconHTML;
+    if (ariaExpanded === 'true') {
+      iconHTML = '<i class="bi bi-x-lg text-danger"></i>';
+    } else {
+      iconHTML = '<i class="bi bi-text-right text-brown"></i>';
+    }
+
+    // Memasukkan HTML ke dalam tombol
+    toggleButton.innerHTML = iconHTML;
+  });
+
+  document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Mencegah pengiriman form default
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            // Menampilkan pesan respons
+            const responseMessage = document.getElementById('response-message');
+            if (response.ok) {
+                responseMessage.textContent = 'Login successful! Token: ' + data.token;
+                responseMessage.className = 'text-success';
+                window.location.href = '/dashboard'
+            } else {
+                responseMessage.textContent = data.message || 'Login failed!';
+                responseMessage.className = 'text-danger'; // Mengubah warna pesan menjadi merah
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const responseMessage = document.getElementById('response-message');
+            responseMessage.textContent = 'An error occurred. Please try again.';
+            responseMessage.className = 'text-danger'; // Mengubah warna pesan menjadi merah
+        }
+    });
+
+</script>

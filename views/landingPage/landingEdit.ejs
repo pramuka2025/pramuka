@@ -1,0 +1,56 @@
+<div class="container">
+  <h1>Edit Landing Page</h1>
+  <% if (message) { %> <% if (message.status === 'error') { %>
+  <div id="responseMessage" style="color: rgb(244, 77, 77)"><%= message.pesan %></div>
+  <% } else if (message.status === 'success') { %>
+  <div id="responseMessage" style="color: rgb(77, 244, 77)"><%= message.pesan %></div>
+  <% } %> <% } %>
+  <form action="/landing/edit/<%= landing._id %>" class="contin" method="POST" enctype="multipart/form-data">
+    <label for="title">Judul:</label>
+    <input type="text" id="title" name="title" value="<%= landing.title %>" />
+
+    <label class="mt-1" for="about">Tentang:</label>
+    <textarea id="about" name="about"><%= landing.about %></textarea>
+
+    <label class="mt-1" for="description">Description:</label>
+    <textarea id="description" name="description"><%= landing.description %></textarea>
+
+    <h2>Hero Section</h2>
+
+    <label for="heroImage">Upload Gambar:</label>
+    <input type="file" id="heroImage" name="heroImage" />
+    <img src="<%= landing.heroSection.image.url %>" style="width: 70px; height: 70px" />
+
+    <label for="heroImageAlt">Teks Alt Gambar:</label>
+    <input type="text" id="heroImageAlt" name="heroImageAlt" value="<%= landing.heroSection.image.alt %>" />
+
+    <label for="ctaButtonDescription">Description Tombol CTA:</label>
+    <input type="text" id="ctaButtonDescription" name="ctaButtonDescription" value="<%= landing.heroSection.ctaButton.description%>" />
+    <label for="ctaButtonText">Teks Tombol CTA:</label>
+    <input type="text" id="ctaButtonText" name="ctaButtonText" value="<%= landing.heroSection.ctaButton.text%>" />
+
+    <label for="ctaButtonLink">Link Tombol CTA:</label>
+    <input type="text" id="ctaButtonLink" name="ctaButtonLink" value="<%= landing.heroSection.ctaButton.link %>" />
+
+    <h2>Social Media</h2>
+
+    <label for="facebookLink">Link Facebook:</label>
+    <input type="text" id="facebookLink" name="socialMedia[facebook][link]" value="<%= landing.socialMedia.facebook.link %>" />
+
+    <label for="instagramLink">Link Instagram:</label>
+    <input type="text" id="instagramLink" name="socialMedia[instagram][link]" value="<%= landing.socialMedia.instagram.link %>" />
+
+    <h2>Footer</h2>
+
+    <label for="email">email:</label>
+    <input type="email" id="email" name="email" value="<%= landing.footer.contact.email %>" />
+
+    <label for="phone">phone:</label>
+    <input type="phone" id="phone" name="phone" value="<%= landing.footer.contact.phone %>" />
+
+    <label for="address">address:</label>
+    <input type="address" id="address" name="address" value="<%= landing.footer.contact.address %>" />
+
+    <button class="btn btn-success mb-4 mt-2" type="submit">Edit Landing Page</button>
+  </form>
+</div>

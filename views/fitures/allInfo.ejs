@@ -1,0 +1,62 @@
+<div class="container">
+  <!-- Input Pencarian -->
+  <div class="mb-3 d-flex bg-white rounded p-1 w-75" style="border: 1px solid black">
+    <input type="text" id="searchInput" class="form-control shadow-none border-0 p-0 m-0" placeholder="Cari artikel..." onkeyup="filterArticles()" />
+    <i class="bi bi-search fw-bold text-dark"></i>
+  </div>
+
+  <section id="articleSection">
+    <% fiture.reverse().forEach((artikel) => { %>
+    <div class="card mb-1 border-1 border-dark artikel-card" onclick="detaileInfo('<%= artikel._id %>')">
+      <div class="row g-0">
+        <div class="col-4">
+          <img src="<%= artikel.imageUrl %>" class="img-fluid rounded-start p-1" style="object-fit: cover; height: 100%" alt="<%= artikel.title %>" />
+        </div>
+        <div class="col">
+          <div class="card-body h-100 m-1 d-flex align-items-start flex-column">
+            <div class="atas flex-grow-1">
+              <h5 class="card-title text-ellipsis-2 m-0 p-0 fw-bold"><%= artikel.title %></h5>
+              <p class="card-text text-ellipsis-2 m-0 p-0"><%= artikel.description %></p>
+            </div>
+
+            <p class="card-text text-ellipsis-2 m-0 p-0"><small class="text-muted"><%= artikel.createdAt %></small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </section>
+
+  <!-- Pesan ketika tidak ada data -->
+  <div id="noDataMessage" class="alert alert-warning" style="display: none">Maaf Artikel / Info tidak ada.</div>
+</div>
+
+<script>
+  function filterArticles() {
+    // Ambil input pencarian
+    const input = document.getElementById('searchInput');
+    const filter = input.value.trim().toLowerCase(); // Menghapus spasi di awal dan akhir
+    const articleSection = document.getElementById('articleSection');
+    const cards = articleSection.getElementsByClassName('artikel-card');
+    const noDataMessage = document.getElementById('noDataMessage');
+
+    let hasVisibleArticles = false; // Flag untuk memeriksa apakah ada artikel yang ditampilkan
+
+    // Loop melalui semua kartu artikel dan sembunyikan yang tidak cocok
+    for (let i = 0; i < cards.length; i++) {
+      const title = cards[i].getElementsByClassName('card-title')[0].innerText.trim().toLowerCase(); // Menghapus spasi di awal dan akhir
+      const description = cards[i].getElementsByClassName('card-text')[0].innerText.trim().toLowerCase(); // Menghapus spasi di awal dan akhir
+
+      // Cek apakah judul atau deskripsi mengandung kata kunci pencarian
+      if (title.includes(filter) || description.includes(filter)) {
+        cards[i].style.display = ''; // Tampilkan kartu
+        hasVisibleArticles = true; // Set flag menjadi true jika ada artikel yang ditampilkan
+      } else {
+        cards[i].style.display = 'none'; // Sembunyikan kartu
+      }
+    }
+
+    // Tampilkan atau sembunyikan pesan "Data tidak ada"
+    noDataMessage.style.display = hasVisibleArticles ? 'none' : 'block';
+  }
+</script>

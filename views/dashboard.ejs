@@ -1,0 +1,238 @@
+<div style="font-size: 10px;">
+  <div class="content ms-2">
+    <section>
+      <div class="fs-3 fw-bold" id="landing-page">Landing Page</div>
+      <a class="btn mb-1 btn-warning btn-sm" href="/landing/landingadd">Landing Page Add</a>
+      <a class="btn mb-1 btn-success btn-sm" href="/landing/landingedit/<%= landing._id %>">Landing Page Edit</a>
+      <a class="btn mb-1 btn-danger btn-sm" href="/landing/delete/<%= landing._id %>">Landing Page Delete</a>
+    </section>
+    <!-- PARTISIPANS SECTION -->
+    <section>
+      <div class="fs-3 fw-bold" id="landing-page">Menu</div>
+      <a class="btn btn-primary btn-sm " href="/menu/menuadd">Tambah Menu <span class="fw-bold">+</span></a>
+      <table id="documentation" class="display w-100">
+ 
+      <table id="partisipans" class="display w-100">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Judul</th>
+            <th>Link</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.menu.forEach((dat, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <!-- Menampilkan nomor urut -->
+            <td><%= dat.title %></td>
+            <td><%= dat.link %></td>
+            <td class="">
+                <a class="btn btn-warning btn-sm mb-1" href="/menu/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                       <button type="submit" class="btn btn-danger btn-sm" onclick="menuDeleteDoc('<%= dat._id %>')">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </section>
+    <!-- DOCUMENTATION SECTION -->
+    <section>
+      <div class="fs-3 fw-bold" id="landing-page">Galery Foto</div>
+      <a class="btn btn-primary btn-sm" href="/doc/docadd">Tambah Foto <span class="fw-bold">+</span></a>
+      <table id="documentation" class="display w-100">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Title</th>
+            <th>Img</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.doc.forEach((dat, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <!-- Menampilkan nomor urut -->
+            <td ><%= dat.title %></td>
+            <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
+            <td class=""><%= dat.description %></td>
+            <td>
+              <a class="btn btn-warning btn-sm mb-1" href="/doc/docedit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteDoc('<%= dat._id%>')">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+    <!-- FITURE SECTION -->
+    <section>
+      <div class="fs-3 fw-bold" id="landing-page">Artikel & Info</div>
+      <a class="btn btn-primary btn-sm " href="/fitures/fituradd">Tambah artikel & info <span class="fw-bold">+</span></a>
+      <table id="documentation" class="display w-100">
+ 
+      <table id="fitures" class="display w-100">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Title</th>
+            <th>Img</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.fiture.forEach((dat, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <!-- Menampilkan nomor urut -->
+            <td><%= dat.title %></td>
+            <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
+            <td><span class=""><%= dat.description %></span></td>
+
+            <td class="">
+              <a class="btn btn-warning btn-sm mb-1" href="/fitures/fituredit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteFitur('<%=dat._id%>')">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+      <!-- PARTISIPANS SECTION -->
+      <section>
+        <div class="fs-3 fw-bold" id="landing-page">Partisipans / peserta</div>
+        <a class="btn btn-primary btn-sm " href="/partisipans/addpartisipans">Tambah Partisipans / peserta <span class="fw-bold">+</span></a>
+        <table id="documentation" class="display w-100">
+   
+        <table id="partisipans" class="display w-100">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Judul</th>
+              <th>Peserta</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.partisipans.forEach((dat, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <!-- Menampilkan nomor urut -->
+              <td><%= dat.title %></td>
+              <td>
+                <ul>
+                    <% dat.peserta.forEach((peserta) => { %>
+                        <li><%= peserta %></li>
+                    <% }); %>
+                </ul>
+             </td>
+              <td class="">
+                  <a class="btn btn-warning btn-sm mb-1" href="/partisipans/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                         <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeletePartisipans('<%= dat._id %>')">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+              </td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </section>
+  </div>
+</div>
+
+<script>
+  function confirmDeleteDoc(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+      fetch('/doc/delete/' + id, {
+        method: 'DELETE', // Metode DELETE
+      })
+      .then((response) => {
+      if (response.ok) {
+          // Jika berhasil, refresh halaman atau hapus baris dari tabel
+          alert('Data berhasil dihapus');
+          location.reload(); // Refresh halaman untuk menampilkan data terbaru
+      } else {
+        // Jika gagal, tampilkan pesan gagal
+        alert('Gagal menghapus data');
+      }
+      })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus data');
+        });
+    }
+  }
+  function menuDeleteDoc(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+      fetch('/menu/delete/' + id, {
+        method: 'DELETE', // Metode DELETE
+      })
+      .then((response) => {
+      if (response.ok) {
+          // Jika berhasil, refresh halaman atau hapus baris dari tabel
+          alert('Data berhasil dihapus');
+          location.reload(); // Refresh halaman untuk menampilkan data terbaru
+      } else {
+        // Jika gagal, tampilkan pesan gagal
+        alert('Gagal menghapus data');
+      }
+      })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus data');
+        });
+    }
+  }
+  function confirmDeleteFitur(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+      fetch('/fitures/delete/' + id, {
+        method: 'DELETE', // Metode DELETE
+      })
+      .then((response) => {
+          if (response.ok) {
+              // Jika berhasil, refresh halaman atau hapus baris dari tabel
+              alert('Data berhasil dihapus');
+              location.reload(); // Refresh halaman untuk menampilkan data terbaru
+          } else {
+              // Jika gagal, tampilkan pesan gagal
+              alert('Gagal menghapus data');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus data');
+        });
+    }
+  }
+  function confirmDeletePartisipans(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+      fetch('/partisipans/delete/' + id, {
+        method: 'DELETE', // Metode DELETE
+      })
+      .then((response) => {
+    if (response.ok) {
+        // Jika berhasil, refresh halaman atau hapus baris dari tabel
+        alert('Data berhasil dihapus');
+        location.reload(); // Refresh halaman untuk menampilkan data terbaru
+    } else {
+        // Jika gagal, tampilkan pesan gagal
+        alert('Gagal menghapus data');
+    }
+})
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus data');
+        });
+    }
+  }
+</script>

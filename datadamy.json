@@ -1,0 +1,31 @@
+{
+  "landingPage": {
+    "title": "Web Pramuka",
+    "about": "Selamat datang di Web Pramuka, tempat berkumpulnya para anggota pramuka untuk berbagi informasi, pengalaman, dan kegiatan.",
+    "heroSection": {
+      "image": {
+        "url": "url_to_hero_image.jpg",
+        "alt": "Gambar hero Web Pramuka"
+      },
+      "ctaButton": {
+        "text": "Daftar Sekarang",
+        "link": "/daftar"
+      }
+    },
+    "socialMedia": {
+      "facebook": {
+        "link": "https://facebook.com/webpramuka"
+      },
+      "instagram": {
+        "link": "https://instagram.com/webpramuka"
+      }
+    },
+    "footer": {
+      "contact": {
+        "email": "contact@webpramuka.com",
+        "phone": "+62123456789",
+        "address": "Jalan Pramuka No.1, Jakarta"
+      }
+    }
+  }
+}

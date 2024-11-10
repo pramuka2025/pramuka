@@ -1,0 +1,116 @@
+<div class="container">
+  <section>
+    <div class="mt-2 mb-2">
+      <div class="d-flex justify-content-between">
+        <h1 class="fs-3 pt-3"><%= landing.description %></h1>
+
+        <div class="mt-1 mb-2 d-flex">
+          <img src="./images/pramuka1.png" class="m-1" alt="logo pramuka" style="width: 40px; height: 40px" />
+          <img src="./images/pramuka2.png" class="m-1" alt="logo pramuka" style="width: 40px; height: 40px" />
+        </div>
+      </div>
+      <div class="image-container">
+        <img src="<%= landing.heroSection.image.url %>" alt="Contoh Gambar" class="img-fluid rounded" />
+        <div class="overlay"></div>
+        <div class="text text-center">
+          <div><%= landing.heroSection.ctaButton.description %></div>
+          <div>
+            <a class="btn btn-primary btn-sm" href="<%= landing.heroSection.ctaButton.link %>"><%= landing.heroSection.ctaButton.text %></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- menu -->
+  <section>
+    <div class="card border-1 border-dark mt-2">
+      <div class="card-body text-center">
+        <% data.menu.forEach(dat => { %>
+        <a class="btn btn-outline-dark btn-sm" href="<%= dat.link %>"><%= dat.title %></a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+  <!-- Galery -->
+  <section>
+    <div class="d-flex justify-content-between mb-2 mt-2">
+      <div class="fw-bold">Galery Foto :</div>
+      <div class="">
+        <a href="/galery" class="text-decoration-none">Lainnya..</a>
+      </div>
+    </div>
+    <div class="row w-100">
+      <% data.doc.reverse().slice(0, 5).forEach(dat => {%>
+      <div class="col-6 m-0 p-2">
+        <div class="card border-1 border-brown pointer" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
+          <div class="position-relative">
+            <img src="<%= dat.imageUrl %>" class="card-img-top" style="object-fit: cover; height: 100px" alt="<%= dat.title %>" />
+            <div class="overlay"></div>
+          </div>
+          <div class="card-body m-0 p-0 ps-2 pe-2">
+            <p class="card-text text-b m-0 p-0 text-ellipsis"><%= dat.title %></p>
+            <p class="card-text text-b m-0 p-0 text-ellipsis text-muted"><%= dat.createdAt %></p>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+  <!-- Artikel & Info -->
+  <section>
+    <div class="d-flex justify-content-between mb-2 mt-2">
+      <div class="fw-bold">Artikel & Info :</div>
+      <a href="/allinfo" class="text-decoration-none">Lainnya..</a>
+    </div>
+    <% data.fiture.reverse().slice(0, 4).forEach( (artikel) => {%>
+    <div class="card mb-1 border-1 border-dark" onclick="detaileInfo('<%= artikel._id %>')">
+      <div class="row g-0">
+        <div class="col-4">
+          <img src="<%= artikel.imageUrl %>" class="img-fluid rounded-start p-1" style="object-fit: cover; height: 100%" alt="<%= artikel.title %>" />
+        </div>
+        <div class="col">
+          <div class="card-body h-100 m-1 m-1 d-flex align-items-start flex-column">
+            <div class="atas flex-grow-1">
+              <h5 class="card-title text-ellipsis-2 m-0 p-0 fw-bold"><%= artikel.title %></h5>
+              <p class="card-text text-ellipsis-2 m-0 p-0"><%= artikel.description %></p>
+            </div>
+
+            <p class="card-text text-ellipsis-2 m-0 p-0"><small class="text-muted"><%= artikel.createdAt %></small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </section>
+  <!-- Peserta -->
+  <section>
+    <div class="d-flex justify-content-center mb-1 mt-3">
+      <div class="fw-bold">Organisasi & Peserta Pramuka :</div>
+    </div>
+
+    <table class="table table-bordered border-primary">
+      <thead>
+        <tr>
+          <% data.partisipans.forEach((parti)=> { %>
+          <th class="bg-warning"><%= parti.title %></th>
+          <% }) %>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <% data.partisipans.forEach((parti,index)=> { %>
+          <td class="m-2">
+            <% parti.peserta.forEach((peserta) => { %>
+            <div><i class="bi bi-check-circle-fill text-success me-1"></i><%= peserta %></div>
+            <% }); %>
+          </td>
+          <% }) %>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+<script>
+  const token = localStorage.getItem('token');
+  console.log(token);
+</script>

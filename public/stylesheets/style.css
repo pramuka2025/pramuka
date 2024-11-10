@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+* {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+:root {
+  --brown: #342519;
+}
+.text-dark {
+  color: var(--brown);
+}
+.border-dark {
+  border-color: 1px solid var(--brown) !important;
+}
+.bg-dark {
+  background-color: var(--brown) !important;
+  color: white;
+}
+.btn-outline-dark {
+  border: 1px solid var(--brown) !important;
+}
+.btn-outline-dark:hover {
+  background-color: var(--brown) !important;
+  color: white;
+}
+/* ARTIKEL */
+#articleSection {
+  display: flex;
+  flex-direction: column; /* Mengatur elemen dalam kolom */
+  align-items: flex-start; /* Mengatur konten ke kiri */
+}
+
+.artikel-card {
+  width: 100%; /* Pastikan kartu mengambil lebar penuh */
+  margin-bottom: 10px; /* Tambahkan sedikit jarak antara kartu */
+}
+
+.table {
+  border-collapse: separate; /* Memisahkan border */
+  border-spacing: 5px; /* Menambahkan jarak antara border */
+}
+.table th,
+.table td {
+  border: 1px solid #007bff; /* Border untuk th dan td */
+  border-left: 4px solid var(--brown);
+  padding: 10px; /* Menambahkan padding di dalam sel */
+  background-color: white; /* Latar belakang putih untuk sel */
+}
+
+.pointer {
+  cursor: pointer;
+}
+/* Efek hover */
+.bg-brown:hover {
+  background-color: var(--hover-color) !important; /* Ganti dengan warna yang diinginkan saat hover */
+  color: #fff; /* Warna teks saat hover (opsional) */
+  transform: scale(1.05); /* Contoh efek zoom (opsional) */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transisi halus */
+}
+.text-ellipsis {
+  display: -webkit-box; /* Untuk WebKit (Chrome, Safari) */
+  -webkit-box-orient: vertical; /* Mengatur orientasi box menjadi vertikal */
+  -webkit-line-clamp: 1; /* Menentukan jumlah baris yang ditampilkan */
+  overflow: hidden; /* Menyembunyikan teks yang melampaui batas */
+  text-overflow: ellipsis; /* Menambahkan titik tiga di akhir teks */
+}
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  font-size: small;
+}
+.image-container {
+  position: relative; /* Menjadikan posisi relatif untuk overlay */
+  display: inline-block; /* Membuat kontainer inline */
+}
+.image-container img {
+  display: block; /* Menghilangkan jarak bawah pada gambar */
+  width: 100%; /* Mengatur lebar gambar sesuai kontainer */
+  height: auto; /* Mengatur tinggi gambar secara proporsional */
+}
+.overlay {
+  position: absolute; /* Memposisikan overlay di atas gambar */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1); /* Hitam dengan opasitas 10% */
+  z-index: 1; /* Menempatkan overlay di depan gambar */
+}
+.text {
+  position: absolute; /* Memposisikan teks di atas overlay */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Mengatur teks ke tengah */
+  color: white; /* Warna teks */
+  z-index: 2; /* Menempatkan teks di atas overlay */
+}
+.text-b {
+  font-size: 12px;
+}

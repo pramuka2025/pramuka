@@ -1,0 +1,10 @@
+<div class="container">
+  <p class="text-b text-muted mt-2 mb-0">Dibuat:<%= fiture.createdAt %></p>
+  <h1 class="p-0 m-0"><%= fiture.title %></h1>
+  <p><%= fiture.description %></p>
+  <div class="position-relative mt-2">
+    <img src="<%= fiture.imageUrl %>" class="img-fluid" alt="<%= fiture.title %>" />
+    <div class="overlay"></div>
+  </div>
+  <div class="content mt-2"><%- fiture.content %></div>
+</div>

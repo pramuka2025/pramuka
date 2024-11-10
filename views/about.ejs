@@ -1,0 +1,26 @@
+<div class="container">
+  <section>
+    <div class="mb-2">
+      <div class="d-flex justify-content-between">
+        <h1 class="fs-3 pt-3"><%= landing.description %></h1>
+
+        <div class="mt-1 mb-2 d-flex">
+          <img src="./images/pramuka1.png" class="me-1" alt="logo pramuka" style="width: 40px; height: 40px" />
+          <img src="./images/pramuka2.png" class="" alt="logo pramuka" style="width: 40px; height: 40px" />
+        </div>
+      </div>
+      <div class="image-container">
+        <img src="<%= landing.heroSection.image.url %>" alt="Contoh Gambar" class="img-fluid rounded" />
+        <div class="overlay"></div>
+        <div class="text text-center">
+          <div><%= landing.heroSection.ctaButton.description %></div>
+          <div>
+            <a class="btn btn-primary btn-sm" href="<%= landing.heroSection.ctaButton.link %>"><%= landing.heroSection.ctaButton.text %></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr class="bg-primary" style="height: 3px" />
+  <p><%= landing.about %></p>
+</div>

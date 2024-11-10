@@ -1,0 +1,55 @@
+<div class="container">
+  <h1>Edit Partisipan</h1>
+  <form action="/partisipans/e/<%= partisipan._id %>" method="POST">
+    <div>Judul :</div>
+    <input type="text" name="title" value="<%= partisipan.title %>" placeholder="Judul" required />
+    <div id="pesertaContainer">
+      <% partisipan.peserta.forEach((peserta, index) => { %>
+      <div>
+        <div>Nama Peserta :</div>
+        <input type="text" name="peserta[]" value="<%= peserta %>" placeholder="Nama Peserta" required />
+        <% if (index > 0) { %>
+        <!-- Hanya tampilkan tombol hapus untuk peserta setelah yang pertama -->
+        <button class="border-1 border-danger" type="button" onclick="removePeserta(this)"><i class="bi bi-x-lg text-danger"></i></button>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+
+    <button class="btn btn-success mt-2 mb-2" type="button" onclick="addPeserta()">Add Peserta</button>
+    <button class="btn btn-success mt-2 mb-2" type="submit">Update</button>
+  </form>
+  <% if (message) { %>
+  <div id="responseMessage" style="color: green"><%= message %></div>
+  <% } %>
+
+  <a href="/dashboard">Back to Dashboard</a>
+</div>
+<script>
+  function addPeserta() {
+    const pesertaContainer = document.getElementById('pesertaContainer');
+    const newPesertaDiv = document.createElement('div'); // Buat div untuk setiap input peserta
+    const newPeserta = document.createElement('input');
+    newPeserta.type = 'text';
+    newPeserta.name = 'peserta[]';
+    newPeserta.placeholder = 'Nama Peserta';
+    newPeserta.required = true;
+    newPeserta.classList.add('mb-1');
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.classList = 'ms-1 border-1 border-danger';
+    removeButton.innerHTML = '<i class="bi bi-x-lg  text-danger">';
+    removeButton.onclick = function () {
+      pesertaContainer.removeChild(newPesertaDiv); // Hapus input peserta
+    };
+
+    newPesertaDiv.appendChild(newPeserta);
+    newPesertaDiv.appendChild(removeButton); // Tambahkan tombol hapus ke div
+    pesertaContainer.appendChild(newPesertaDiv); // Tambahkan div ke pesertaContainer
+  }
+
+  function removePeserta(button) {
+    const pesertaContainer = document.getElementById('pesertaContainer');
+    pesertaContainer.removeChild(button.parentElement); // Hapus input peserta
+  }
+</script>
