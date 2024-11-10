@@ -1,5 +1,4 @@
-env Variabel
-
+##env Variabel
 MONGO_URI=mongodb://localhost:27017/pramuka
 USER_EMAIL=pramuka2024@gmail.com
 USER_PSWD=pramuka2025
