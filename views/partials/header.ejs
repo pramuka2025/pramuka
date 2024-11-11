@@ -1,7 +1,12 @@
 <header class="w-100">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow shadow-sm">
     <div class="container-fluid">
+      <% if(landing && landing.length > 0) {%>
       <a class="navbar-brand text-brown" href="/"><%= landing.title %></a>
+      <% }else{ %>
+        <a class="navbar-brand text-brown" href="/">Pramuka</a>
+
+      <% } %>
       <button class="navbar-toggler shadow-none injec" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <i class="bi bi-text-right text-brown"></i>
       </button>
@@ -16,17 +21,21 @@
               <a class="nav-link" href="/about">About</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="/allinfo" id="login">Artikel & info</a>
+          </li>
+          <li class="nav-item">
               <a class="nav-link" href="/galery" id="login">Galery</a>
             </li>
           </div>
           <div>
             <% if (!user || user.token === null) { %>
               
-              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginstatic">Login</a>
-          <% } else { %>
-              <form action="/api/auth/logout" method="POST" style="display:inline;">
-                  <button class="nav-link border-0 shadow-none bg-dark p-0 m-0" type="submit">Logout</button>
-              </form>
+              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginstatic"><i class="bi bi-person-fill-lock"></i></a>
+              <% } else { %>
+               <div class="d-flex"> <a class="nav-link" href="/dashboard">dashboard</a>
+                <form action="/api/auth/logout" method="POST" style="display:inline;">
+                    <button class="nav-link border-0 shadow-none bg-dark pt-2 m-0" type="submit"><i class="bi  bi-box-arrow-right"></i></button>
+                </form></div>
           <% } %>
         </div>
         </ul>
@@ -58,7 +67,13 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-dark">
-        <h5 class="modal-title" id="loginstaticLabel"><%= landing.title %></h5>
+        <% if (landing && landing.length > 0) { %>
+
+          <h5 class="modal-title" id="loginstaticLabel"><%= landing.title %></h5>
+          <% } else{ %>
+
+            <h5 class="modal-title" id="loginstaticLabel">Pramuka</h5>
+            <% } %>
         <button type="button" class="btn border-1 border-danger" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg text-danger fw-bold"></i></button>
       </div>
       <div class="modal-body">

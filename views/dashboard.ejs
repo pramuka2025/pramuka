@@ -3,8 +3,10 @@
     <section>
       <div class="fs-3 fw-bold" id="landing-page">Landing Page</div>
       <a class="btn mb-1 btn-warning btn-sm" href="/landing/landingadd">Landing Page Add</a>
-      <a class="btn mb-1 btn-success btn-sm" href="/landing/landingedit/<%= landing._id %>">Landing Page Edit</a>
-      <a class="btn mb-1 btn-danger btn-sm" href="/landing/delete/<%= landing._id %>">Landing Page Delete</a>
+      <% if(landing && landing.length > 0 ) { %>
+        <a class="btn mb-1 btn-success btn-sm" href="/landing/landingedit/<%= landing._id %>">Landing Page Edit</a>
+        <a class="btn mb-1 btn-danger btn-sm" href="/landing/delete/<%= landing._id %>">Landing Page Delete</a>
+        <% } %>
     </section>
     <!-- PARTISIPANS SECTION -->
     <section>
@@ -22,20 +24,22 @@
           </tr>
         </thead>
         <tbody>
+         <% if ( data.menu && data.menu.length > 0 ){ %>
           <% data.menu.forEach((dat, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <!-- Menampilkan nomor urut -->
-            <td><%= dat.title %></td>
-            <td><%= dat.link %></td>
-            <td class="">
-                <a class="btn btn-warning btn-sm mb-1" href="/menu/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
-                       <button type="submit" class="btn btn-danger btn-sm" onclick="menuDeleteDoc('<%= dat._id %>')">
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-            </td>
-          </tr>
-        <% }) %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <!-- Menampilkan nomor urut -->
+              <td><%= dat.title %></td>
+              <td><%= dat.link %></td>
+              <td class="">
+                  <a class="btn btn-warning btn-sm mb-1" href="/menu/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                         <button type="submit" class="btn btn-danger btn-sm" onclick="menuDeleteDoc('<%= dat._id %>')">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+              </td>
+            </tr>
+          <% }) %>
+          <% } %>
         </tbody>
       </table>
     </section>
@@ -54,21 +58,24 @@
           </tr>
         </thead>
         <tbody>
+        <% if (data.doc && data.doc.length > 0) {%> 
           <% data.doc.forEach((dat, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <!-- Menampilkan nomor urut -->
-            <td ><%= dat.title %></td>
-            <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
-            <td class=""><%= dat.description %></td>
-            <td>
-              <a class="btn btn-warning btn-sm mb-1" href="/doc/docedit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
-                <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteDoc('<%= dat._id%>')">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-            </td>
-          </tr>
-          <% }) %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <!-- Menampilkan nomor urut -->
+              <td ><%= dat.title %></td>
+              <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
+              <td class=""><%= dat.description %></td>
+              <td>
+                <a class="btn btn-warning btn-sm mb-1" href="/doc/docedit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteDoc('<%= dat._id%>')">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+              </td>
+            </tr>
+            <% }) %>
+   
+          <% } %>
         </tbody>
       </table>
     </section>
@@ -89,22 +96,24 @@
           </tr>
         </thead>
         <tbody>
+         <% if(data.fiture && data.fiture > 0){ %>
           <% data.fiture.forEach((dat, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <!-- Menampilkan nomor urut -->
-            <td><%= dat.title %></td>
-            <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
-            <td><span class=""><%= dat.description %></span></td>
-
-            <td class="">
-              <a class="btn btn-warning btn-sm mb-1" href="/fitures/fituredit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
-                  <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteFitur('<%=dat._id%>')">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-            </td>
-          </tr>
-          <% }) %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <!-- Menampilkan nomor urut -->
+              <td><%= dat.title %></td>
+              <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>
+              <td><span class=""><%= dat.description %></span></td>
+  
+              <td class="">
+                <a class="btn btn-warning btn-sm mb-1" href="/fitures/fituredit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteFitur('<%=dat._id%>')">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+              </td>
+            </tr>
+            <% }) %>
+          <% } %>
         </tbody>
       </table>
     </section>
@@ -115,6 +124,8 @@
         <table id="documentation" class="display w-100">
    
         <table id="partisipans" class="display w-100">
+          
+          <% if(data.partisipans && data.partisipans.length > 0){ %>
           <thead>
             <tr>
               <th>No</th>
@@ -124,27 +135,31 @@
             </tr>
           </thead>
           <tbody>
-            <% data.partisipans.forEach((dat, index) => { %>
-            <tr>
-              <td><%= index + 1 %></td>
-              <!-- Menampilkan nomor urut -->
-              <td><%= dat.title %></td>
-              <td>
-                <ul>
-                    <% dat.peserta.forEach((peserta) => { %>
-                        <li><%= peserta %></li>
-                    <% }); %>
-                </ul>
-             </td>
-              <td class="">
-                  <a class="btn btn-warning btn-sm mb-1" href="/partisipans/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
-                         <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeletePartisipans('<%= dat._id %>')">
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-              </td>
-            </tr>
-          <% }) %>
+              <% data.partisipans.forEach((dat, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <!-- Menampilkan nomor urut -->
+                  <td><%= dat.title %></td>
+                  <td>
+                    <ul>
+                        <% dat.peserta.forEach((peserta) => { %>
+                            <li><%= peserta %></li>
+                        <% }); %>
+                    </ul>
+                 </td>
+                  <td class="">
+                      <a class="btn btn-warning btn-sm mb-1" href="/partisipans/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                             <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeletePartisipans('<%= dat._id %>')">
+                          <i class="bi bi-trash-fill"></i>
+                        </button>
+                  </td>
+                </tr>
+              <% }) %>
+             
           </tbody>
+          <% } else{ %>
+            <p class="alert alert-warning">Maaf Peserta Belom Ada !<p>
+              <% } %>
         </table>
       </section>
   </div>

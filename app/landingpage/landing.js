@@ -21,28 +21,37 @@ const upload = multer({ storage: storage });
 
 // Route untuk menampilkan halaman tambah landing page
 router.get('/landingadd', auth, async (req, res) => {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Add', url: '/landing/landingadd' },
+  ];
   const landing = await LandingPage.find();
 
-  res.render('landingPage/landingAdd', { user: req.user, message: null, title: 'Landing Page Create', layout: 'index', landing: landing[0] }); // Render halaman EJS untuk menambah landing page
+  res.render('landingPage/landingAdd', { user: req.user, breadcrumb, isRoot: false, message: null, title: 'Landing Page Create', layout: 'index', landing: landing[0] }); // Render halaman EJS untuk menambah landing page
 });
 
 // Create - Menambahkan Landing Page baru
 router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
   const { title, about, description, socialMedia, email, phone, address } = req.body;
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Add', url: '/landing/landingadd' },
+  ];
 
   // Membuat URL path untuk gambar yang diupload
-  const heroImageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`;
+  const heroImageUrl = `${process.env.BASE_URL}/${req.file.filename}`;
 
   const landingPage = new LandingPage({
     title,
     about,
+    description,
     heroSection: {
       image: {
         url: heroImageUrl,
         alt: req.body.heroImageAlt, // Mengambil teks alt dari form
       },
       ctaButton: {
-        text: req.body.ctaButtonDescription,
+        description: req.body.ctaButtonDescription,
         text: req.body.ctaButtonText,
         link: req.body.ctaButtonLink,
       },
@@ -67,6 +76,8 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
         pesan: `Landing Page berhasil dibuat!`,
       },
       user: req.user,
+      breadcrumb,
+      isRoot: false,
       title: 'Landing Page Create',
       layout: 'index',
       landing: landing[0],
@@ -79,6 +90,8 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
         status: 'error',
         pesan: `Landing Page gagal dibuat! ${error}`,
       },
+      breadcrumb,
+      isRoot: false,
       user: req.user,
       title: 'Landing Page Create',
       layout: 'index',
@@ -87,8 +100,55 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
   }
 });
 
+// Rute untuk menampilkan halaman edit
+router.get('/edit/:id', auth, async (req, res) => {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Edit', url: `/edit/${req.params.id}/` },
+  ];
+
+  const landing = await LandingPage.findById(req.params.id); // Ambil landing page berdasarkan ID
+  try {
+    if (!landing) {
+      return res.status(404).send('Landing page not found'); // Tangani jika landing page tidak ditemukan
+    }
+
+    res.render('landingPage/landingEdit', {
+      user: req.user,
+      breadcrumb,
+      isRoot: false,
+      message: {
+        status: 'success',
+        pesan: `Landing Page berhasil diperbarui!`,
+      },
+      title: 'Landing Page Edit',
+      layout: 'index',
+      landing: landing[0], // Kirim data landing page ke template
+    });
+  } catch (error) {
+    console.error(error);
+    res.render('landingPage/landingEdit', {
+      user: req.user,
+      breadcrumb,
+      isRoot: false,
+      message: {
+        status: 'success',
+        pesan: `Landing Page gagal diperbarui!`,
+      },
+      title: 'Landing Page Edit',
+      layout: 'index',
+      landing: landing[0], // Kirim data landing page ke template
+    });
+  }
+});
+
 // Update - Memperbarui Landing Page berdasarkan ID
 router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Edit', url: `/edit/${req.params.id}/` },
+  ];
+
   const { id } = req.params;
   const { title, about, description, socialMedia, email, phone, address } = req.body;
 
@@ -141,6 +201,8 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
         status: 'success',
         pesan: `Landing Page berhasil diperbarui!`,
       },
+      breadcrumb,
+      isRoot: false,
       user: req.user,
       title: 'Landing Page Edit',
       layout: 'index',
@@ -153,6 +215,8 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
         status: 'error',
         pesan: `Landing Page gagal diperbarui!`,
       },
+      breadcrumb,
+      isRoot: false,
       user: req.user,
       title: 'Landing Page Edit',
       layout: 'index',

@@ -5,6 +5,7 @@
     <i class="bi bi-search fw-bold text-dark"></i>
   </div>
 
+  <% if(fiture && fiture > 0) { %>
   <section id="articleSection">
     <% fiture.reverse().forEach((artikel) => { %>
     <div class="card mb-1 border-1 border-dark artikel-card" onclick="detaileInfo('<%= artikel._id %>')">
@@ -26,6 +27,11 @@
     </div>
     <% }) %>
   </section>
+
+  <% } else{ %>
+  <div class="alert alert-warning" role="alert">Maaf Artikel Atau Info Tidak ada !</div>
+
+  <% } %>
 
   <!-- Pesan ketika tidak ada data -->
   <div id="noDataMessage" class="alert alert-warning" style="display: none">Maaf Artikel / Info tidak ada.</div>

@@ -33,7 +33,6 @@ router.post('/add', auth, async (req, res) => {
   }
 });
 
-// Halaman untuk mengedit partisipan
 router.get('/edit/:id', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },

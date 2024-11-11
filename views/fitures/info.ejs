@@ -1,4 +1,5 @@
 <div class="container">
+  <% if(fiture && fiture.length > 0){ %>
   <p class="text-b text-muted mt-2 mb-0">Dibuat:<%= fiture.createdAt %></p>
   <h1 class="p-0 m-0"><%= fiture.title %></h1>
   <p><%= fiture.description %></p>
@@ -7,4 +8,8 @@
     <div class="overlay"></div>
   </div>
   <div class="content mt-2"><%- fiture.content %></div>
+  <% } else{ %>
+
+  <div class="alert alert-warning">Foto Belum Ada !</div>
+  <% } %>
 </div>

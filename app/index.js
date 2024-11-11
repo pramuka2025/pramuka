@@ -12,18 +12,18 @@ const { auth, authPublic } = require('./auth');
 router.get('/', authPublic, async function (req, res, next) {
   const breadcrumb = [{ name: 'Home', url: '/' }];
   try {
-    const landing = await LandingPage.find();
+    const landingpage = await LandingPage.find();
+    const landing = landingpage ? landingpage : null;
     const doc = await Doc.find();
     const fiture = await Fiture.find();
     const partisipans = await Partisipans.find();
     const menu = await Menu.find();
     const data = {
-      doc: doc,
-      menu: menu ? menu : '',
-      fiture: fiture,
-      partisipans,
+      doc: doc || [], // Jika doc tidak ada, gunakan array kosong
+      menu: menu || [], // Jika menu tidak ada, gunakan array kosong
+      fiture: fiture || [], // Jika fiture tidak ada, gunakan array kosong
+      partisipans: partisipans || [], // Jika partisipans tidak ada, gunakan array kosong
     };
-
     res.render('home', { user: req.user, title: 'halaman home', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
   } catch (error) {
     console.log(error);
@@ -34,7 +34,6 @@ router.get('/', authPublic, async function (req, res, next) {
     });
   }
 });
-
 router.get('/dashboard', auth, async function (req, res, next) {
   const breadcrumb = [
     { name: 'Home', url: '/' },
