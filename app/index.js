@@ -41,6 +41,7 @@ router.get('/dashboard', auth, async function (req, res, next) {
   ];
   try {
     const landing = await LandingPage.find();
+    console.log(landing);
     const doc = await Doc.find();
     const fiture = await Fiture.find();
     const partisipans = await Partisipans.find();

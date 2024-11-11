@@ -1,8 +1,11 @@
 <div class="container">
-  <% if (landing && landing.length > 0) { %>
   <section>
     <div class="mt-2 mb-2">
       <div class="d-flex justify-content-between">
+        <% if(!landing){ %>
+        <p class="alert alert-warning">Tidak ada Description</p>
+        <% }else{ %>
+
         <h1 class="fs-3 pt-3"><%= landing.description %></h1>
 
         <div class="mt-1 mb-2 d-flex">
@@ -19,12 +22,11 @@
             <a class="btn btn-primary btn-sm" href="<%= landing.heroSection.ctaButton.link %>"><%= landing.heroSection.ctaButton.text %></a>
           </div>
         </div>
+        <% } %>
       </div>
     </div>
   </section>
-  <% } else { %>
-  <p>Tidak ada landing page.</p>
-  <% } %>
+
   <!-- menu -->
   <section>
     <div class="card border-1 border-dark mt-2">

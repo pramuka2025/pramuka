@@ -39,6 +39,21 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
   ];
 
   // Membuat URL path untuk gambar yang diupload
+  // Cek keberadaan file
+  if (!req.file) {
+    return res.render('landingPage/landingAdd', {
+      message: {
+        status: 'error',
+        pesan: 'Gambar tidak diupload!',
+      },
+      breadcrumb,
+      isRoot: false,
+      user: req.user,
+      title: 'Landing Page Create',
+      layout: 'index',
+      landing: null,
+    });
+  }
   const heroImageUrl = `${process.env.BASE_URL}/${req.file.filename}`;
 
   const landingPage = new LandingPage({

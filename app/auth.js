@@ -11,11 +11,12 @@ const auth = async (req, res, next) => {
 
     // Simpan data pengguna ke dalam req
     req.user = user[0]; // Anda bisa menyimpan seluruh objek pengguna atau hanya yang diperlukan
+    console.log(user);
 
     next(); // Lanjutkan ke middleware atau rute berikutnya
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).send('Internal Server Error'); // Tangani kesalahan
+    res.status(500).send('dari auth Internal Server Error'); // Tangani kesalahan
   }
 };
 
@@ -28,7 +29,7 @@ const authPublic = async (req, res, next) => {
     next(); // Lanjutkan ke middleware atau rute berikutnya
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).send('Internal Server Error'); // Tangani kesalahan
+    res.status(500).send('dari auth public Internal Server Error'); // Tangani kesalahan
   }
 };
 
