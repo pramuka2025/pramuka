@@ -1,19 +1,17 @@
 <div class="container">
   <div class="container">
     <h1>Landing Page Create</h1>
-    <% if (message) { %> <% if (message.status === 'error') { %>
-    <div id="responseMessage" style="color: rgb(244, 77, 77)"><%= message.pesan %></div>
-    <% } else if (message.status === 'success') { %>
-    <div id="responseMessage" style="color: rgb(77, 244, 77)"><%= message.pesan %></div>
-    <% } %> <% } %>
-    <form action="/landing/add" class="contin" method="POST" enctype="multipart/form-data">
+
+    <div id="responseMessage" class="mb1"></div>
+
+    <form id="landingPageForm" class="contin" enctype="multipart/form-data">
       <label for="title">Judul:</label>
       <input type="text" id="title" name="title" required />
 
       <label class="mt-1" for="about">Tentang:</label>
       <textarea id="about" name="about" required></textarea>
 
-      <label class="mt-1" for="description">description:</label>
+      <label class="mt-1" for="description">Description:</label>
       <textarea id="description" name="description" required></textarea>
 
       <h2>Hero Section</h2>
@@ -43,17 +41,47 @@
 
       <h2>Footer</h2>
 
-      <label for="email">email:</label>
+      <label for="email">Email:</label>
       <input type="email" id="email" name="email" required />
 
-      <label for="phone">phone:</label>
-      <input type="phone" id="phone" name="phone" required />
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" required />
 
-      <label for="address">address:</label>
-      <input type="address" id="address" name="address" required />
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" required />
 
       <button class="btn btn-success mb-4 mt-2" type="submit">Tambah Landing Page</button>
     </form>
     <a href="/dashboard">Back To Dashboard</a>
   </div>
 </div>
+
+<script>
+  document.getElementById('landingPageForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const responseMessage = document.getElementById('responseMessage');
+    const formData = new FormData(this); // Create a FormData object from the form
+
+    // Check if all required fields are filled
+    if (!formData.get('title') || !formData.get('about') || !formData.get('description') || !formData.get('heroImage') || !formData.get('heroImageAlt') || !formData.get('email') || !formData.get('phone') || !formData.get('address')) {
+      responseMessage.classList.add = 'alert alert-danger';
+      responseMessage.textContent = 'Mohon isi semua field !';
+      return;
+    }
+
+    try {
+      const response = await fetch('/landing/add', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      responseMessage.classList.add = 'alert alert-success';
+      responseMessage.textContent = result.message.pesan;
+    } catch (error) {
+      responseMessage.classList.add = 'alert alert-danger';
+      responseMessage.textContent = result.message.pesan;
+    }
+  });
+</script>

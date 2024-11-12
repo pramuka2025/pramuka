@@ -1,5 +1,8 @@
 <div class="container">
-  <% if(landing && landing.length > 0) { %>
+  <% if(!landing ) { %>
+
+  <p class="alert alert-warning">About belom di buat</p>
+  <% } else { %>
   <section>
     <div class="mb-2">
       <div class="d-flex justify-content-between">
@@ -24,7 +27,5 @@
   </section>
   <hr class="bg-primary" style="height: 3px" />
   <p><%= landing.about %></p>
-  <% } else { %>
-  <p class="alert alert-warning">About belom di buat</p>
   <% } %>
 </div>

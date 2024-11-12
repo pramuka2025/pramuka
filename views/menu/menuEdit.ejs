@@ -1,14 +1,17 @@
 <div class="container">
   <h1>Edit Menu</h1>
-  <form action="/menu/add" method="POST">
-    <div>Judul :</div>
-    <input type="text" class="mb-1" name="title" placeholder="Judul" value="<%= menu.title %>" />
-    <div>Link :</div>
-    <input type="text" class="mb-1" name="link" placeholder="Link" value="<%= menu.link %>" />
-    <button class="btn btn-success mt-2 mb-2" type="submit">Submit</button>
+  <% if(!menu) {%>
+  <p class="alert alert-warning">Menu tidak Ada!</p>
+  <% }else { %>
+  <form action="/menu/edit/<%= menu._id %>" class="contin" method="POST">
+    <label for="title">title:</label>
+    <input type="text" id="title" class="mb-1" name="title" placeholder="Judul" value="<%= menu.title %>" />
+    <label for="link">link:</label>
+    <input type="text" id="link" class="mb-1" name="link" placeholder="Link" value="<%= menu.link %>" />
+    <button class="btn btn-success mt-2 mb-2" type="submit">Edit Menu</button>
   </form>
 
-  <% if (message) { %>
+  <% } %> <% if (message) { %>
   <div id="responseMessage" style="color: green"><%= message %></div>
   <% } %>
 

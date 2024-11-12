@@ -96,7 +96,7 @@ router.post('/logout', async (req, res) => {
     user.token = null; // Menghapus token
     await user.save(); // Simpan perubahan
 
-    res.redirect('/');
+    res.json('success logout!');
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -8,7 +8,7 @@
       <a class="btn mb-1 btn-warning btn-sm" href="/landing/landingadd">Landing Page Add</a>
         <p class="alert alert-warning">landing page tidak ada</p>
            <% }else{ %>
-            <a class="btn mb-1 btn-success btn-sm" href="/landing/landingedit/<%= landing._id %>">Landing Page Edit</a>
+            <a class="btn mb-1 btn-success btn-sm" href="/landing/edit/<%= landing._id %>">Landing Page Edit</a>
             <a class="btn mb-1 btn-danger btn-sm" onclick="dleteLanding('<%= landing._id %>')" >Landing Page Delete</a>
 
           <% } %>

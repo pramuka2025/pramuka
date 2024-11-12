@@ -34,12 +34,13 @@ router.post('/add', auth, async (req, res) => {
 });
 
 router.get('/edit/:id', auth, async (req, res) => {
+  const { id } = req.params;
   const breadcrumb = [
     { name: 'Home', url: '/' },
     { name: 'Edit', url: `/menu/edit/${req.params.id}` },
   ];
   try {
-    const menu = await Menu.findById(req.params.id);
+    const menu = await Menu.findById(id);
     const landing = await LandingPage.find();
     if (!menu) {
       return responseHandler(res, null, 'Menu tidak ditemukan', 404);
@@ -50,7 +51,7 @@ router.get('/edit/:id', auth, async (req, res) => {
   }
 });
 
-router.post('/e/:id', auth, async (req, res) => {
+router.post('/edit/:id', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
     { name: 'Edit', url: `/menu/e/${req.params.id}` },
@@ -65,7 +66,6 @@ router.post('/e/:id', auth, async (req, res) => {
     responseHandler(res, null, error.message, 500);
   }
 });
-
 // Menghapus partisipan
 router.delete('/delete/:id', auth, async (req, res) => {
   try {

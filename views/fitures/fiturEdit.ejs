@@ -1,6 +1,9 @@
 <div class="container">
   <h1>Edit Feature</h1>
   <div id="responseMessage"></div>
+  <% if(!feature) {%>
+  <p class="alert alert-warning">artikel atau info tidak ada!</p>
+  <% } else {%>
   <form id="featureForm" class="contin" action="/fitures/edit" method="post" enctype="multipart/form-data">
     <input type="hidden" id="featureId" name="featureId" value="<%= feature._id %>" />
     <!-- Menyimpan ID fitur -->
@@ -19,6 +22,8 @@
 
     <button class="mt-1" type="submit">Update Feature</button>
   </form>
+
+  <% } %>
   <a class="btn btn-success mt-3 mb-3" href="/dashboard">Back to Home</a>
 </div>
 <script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>

@@ -3,7 +3,7 @@
     <div class="mt-2 mb-2">
       <div class="d-flex justify-content-between">
         <% if(!landing){ %>
-        <p class="alert alert-warning">Tidak ada Description</p>
+        <p class="alert alert-warning">Tidak ada Landing Page!</p>
         <% }else{ %>
 
         <h1 class="fs-3 pt-3"><%= landing.description %></h1>
@@ -31,11 +31,11 @@
   <section>
     <div class="card border-1 border-dark mt-2">
       <div class="card-body text-center">
-        <% if (data.menu && data.menu.length > 0) { %> <% data.menu.forEach(dat => { %>
+        <% if (data.menu.length === 0) { %>
+        <p class="alert alert-warning">Tidak ada menu yang tersedia.</p>
+        <% } else { %> <% data.menu.forEach(dat => { %>
         <a class="btn btn-outline-dark btn-sm" href="<%= dat.link %>"><%= dat.title %></a>
-        <% }) %> <% } else { %>
-        <p>Tidak ada menu yang tersedia.</p>
-        <% } %>
+        <% }) %> <% } %>
       </div>
     </div>
   </section>
@@ -48,7 +48,10 @@
       </div>
     </div>
     <div class="row w-100">
-      <% if (data.doc && data.doc.length > 0) { %> <% data.doc.reverse().slice(0, 5).forEach(dat => { %>
+      <% if (data.doc.length === 0) { %>
+      <div class="col-12 alert alert-warning text-center">Tidak ada galeri foto yang tersedia.</div>
+
+      <% } else { %> <% data.doc.reverse().slice(0, 5).forEach(dat => { %>
       <div class="col-6 m-0 p-2">
         <div class="card border-1 border-brown pointer" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
           <div class="position-relative">
@@ -61,9 +64,7 @@
           </div>
         </div>
       </div>
-      <% }); %> <% } else { %>
-      <div class="col-12">Tidak ada galeri foto yang tersedia.</div>
-      <% } %>
+      <% }); %> <% } %>
     </div>
   </section>
   <!-- Artikel & Info -->
@@ -72,25 +73,30 @@
       <div class="fw-bold">Artikel & Info :</div>
       <a href="/allinfo" class="text-decoration-none">Lainnya..</a>
     </div>
-    <% if (data.fiture && data.fiture.length > 0) { %> <% data.fiture.reverse().slice(0, 4).forEach(artikel => { %>
-    <div class="card mb-1 border-1 border-dark" onclick="detaileInfo('<%= artikel._id %>')">
-      <div class="row g-0">
-        <div class="col-4">
-          <img src="<%= artikel.imageUrl %>" class="img-fluid rounded-start p-1" style="object-fit: cover; height: 100%" alt="<%= artikel.title %>" />
-        </div>
-        <div class="col">
-          <div class="card-body h-100 m-1 d-flex align-items-start flex-column">
-            <div class="atas flex-grow-1">
-              <h5 class="card-title text-ellipsis-2 m-0 p-0 fw-bold"><%= artikel.title %></h5>
-              <p class="card-text text-ellipsis-2 m-0 p-0"><%= artikel.description %></p>
+    <% if (data.fiture.length === 0) { %>
+    <div class="alert alert-warning">Tidak ada artikel atau info yang tersedia.</div>
+    <% } else { %>
+    <div>
+      <% data.fiture.reverse().slice(0, 4).forEach(artikel => { %>
+      <div class="card mb-1 border-1 border-dark" onclick="detaileInfo('<%= artikel._id %>')">
+        <div class="row g-0">
+          <div class="col-4">
+            <img src="<%= artikel.imageUrl %>" class="img-fluid rounded-start p-1" style="object-fit: cover; height: 100%" alt="<%= artikel.title %>" />
+          </div>
+          <div class="col">
+            <div class="card-body h-100 m-1 d-flex align-items-start flex-column">
+              <div class="atas flex-grow-1">
+                <h5 class="card-title text-ellipsis-2 m-0 p-0 fw-bold"><%= artikel.title %></h5>
+                <p class="card-text text-ellipsis-2 m-0 p-0"><%= artikel.description %></p>
+              </div>
+              <p class="card-text text-ellipsis-2 m-0 p-0"><small class="text-muted"><%= artikel.createdAt %></small></p>
             </div>
-            <p class="card-text text-ellipsis-2 m-0 p-0"><small class="text-muted"><%= artikel.createdAt %></small></p>
           </div>
         </div>
       </div>
+      <% }); %>
     </div>
-    <% }); %> <% } else { %>
-    <div>Tidak ada artikel atau info yang tersedia.</div>
+
     <% } %>
   </section>
   <!-- Peserta -->
@@ -102,25 +108,26 @@
     <table class="table table-bordered border-primary">
       <thead>
         <tr>
-          <% if (data.partisipans && data.partisipans.length > 0) { %> <% data.partisipans.forEach((parti)=> { %>
+          <% if (data.partisipans.length === 0) { %>
+          <th class="alert alert-warning">Tidak ada data</th>
+
+          <% } else { %> <% data.partisipans.forEach((parti)=> { %>
           <th class="bg-warning"><%= parti.title %></th>
-          <% }) %> <% } else { %>
-          <th class="bg-warning">Tidak ada data</th>
-          <% } %>
+          <% }) %> <% } %>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <% if (data.partisipans && data.partisipans.length > 0) { %> <% data.partisipans.forEach((parti,index)=> { %>
+          <% if (data.partisipans.length === 0) { %>
+
+          <td class="alert alert-warning">Tidak ada data</td>
+          <% }else{ %> <% data.partisipans.forEach((parti,index)=> { %>
           <td class="m-2">
             <% parti.peserta.forEach((peserta) => { %>
             <div><i class="bi bi-check-circle-fill text-success me-1"></i><%= peserta %></div>
             <% }); %>
           </td>
-          <% }) %> <% }else{ %>
-
-          <td class="m-2">Tidak ada data</td>
-          <% } %>
+          <% }) %> <% } %>
         </tr>
       </tbody>
     </table>

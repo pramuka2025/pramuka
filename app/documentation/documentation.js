@@ -120,7 +120,7 @@ router.get('/docedit/:id', auth, async (req, res) => {
   }
 });
 
-router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
+router.post('/docedit/:id', auth, upload.single('image'), async (req, res) => {
   const { id } = req.params;
   const { title, description } = req.body;
   const breadcrumb = [

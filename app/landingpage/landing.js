@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.get('/landingadd', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'LandingPage Add', url: '/landing/landingadd' },
+    { name: 'LandingPage Add', url: '' },
   ];
   const landing = await LandingPage.find();
 
@@ -33,15 +33,15 @@ router.get('/landingadd', auth, async (req, res) => {
 // Create - Menambahkan Landing Page baru
 router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
   const { title, about, description, socialMedia, email, phone, address } = req.body;
-  const breadcrumb = [
-    { name: 'Home', url: '/' },
-    { name: 'LandingPage Add', url: '/landing/landingadd' },
-  ];
+  // const breadcrumb = [
+  //   { name: 'Home', url: '/' },
+  //   { name: 'LandingPage Add', url: '/landing/landingadd' },
+  // ];
 
   // Membuat URL path untuk gambar yang diupload
   // Cek keberadaan file
   if (!req.file) {
-    return res.render('landingPage/landingAdd', {
+    return res.json({
       message: {
         status: 'error',
         pesan: 'Gambar tidak diupload!',
@@ -83,34 +83,34 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
 
   try {
     const savedLandingPage = await landingPage.save();
-    const landing = await LandingPage.find();
-    res.render('landingPage/landingAdd', {
+    // const landing = await LandingPage.find();
+    res.json({
       savedLandingPage,
       message: {
         status: 'success',
         pesan: `Landing Page berhasil dibuat!`,
       },
-      user: req.user,
-      breadcrumb,
-      isRoot: false,
-      title: 'Landing Page Create',
-      layout: 'index',
-      landing: landing[0],
+      // user: req.user,
+      // breadcrumb,
+      // // isRoot: false,
+      // title: 'Landing Page Create',
+      // layout: 'index',
+      // // landing: landing[0],
     }); // Mengembalikan data yang disimpan sebagai JSON
     // res.redirect('/landing'); // Mengarahkan ke halaman daftar landing pages
   } catch (error) {
-    const landing = await LandingPage.find();
-    res.render('landingPage/landingAdd', {
+    // const landing = await LandingPage.find();
+    res.json({
       message: {
         status: 'error',
         pesan: `Landing Page gagal dibuat! ${error}`,
       },
-      breadcrumb,
-      isRoot: false,
-      user: req.user,
-      title: 'Landing Page Create',
-      layout: 'index',
-      landing: landing[0],
+      // breadcrumb,
+      // isRoot: false,
+      // user: req.user,
+      // title: 'Landing Page Create',
+      // layout: 'index',
+      // landing: landing[0],
     });
   }
 });
@@ -119,26 +119,24 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
 router.get('/edit/:id', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'LandingPage Edit', url: `/edit/${req.params.id}/` },
+    { name: 'LandingPage Edit', url: '/edit' },
   ];
 
   const landing = await LandingPage.findById(req.params.id); // Ambil landing page berdasarkan ID
+
   try {
     if (!landing) {
       return res.status(404).send('Landing page not found'); // Tangani jika landing page tidak ditemukan
     }
-
+    console.log(landing);
     res.render('landingPage/landingEdit', {
       user: req.user,
       breadcrumb,
       isRoot: false,
-      message: {
-        status: 'success',
-        pesan: `Landing Page berhasil diperbarui!`,
-      },
+      message: null,
       title: 'Landing Page Edit',
       layout: 'index',
-      landing: landing[0], // Kirim data landing page ke template
+      landing: landing, // Kirim data landing page ke template
     });
   } catch (error) {
     console.error(error);
@@ -159,10 +157,10 @@ router.get('/edit/:id', auth, async (req, res) => {
 
 // Update - Memperbarui Landing Page berdasarkan ID
 router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
-  const breadcrumb = [
-    { name: 'Home', url: '/' },
-    { name: 'LandingPage Edit', url: `/edit/${req.params.id}/` },
-  ];
+  // const breadcrumb = [
+  //   { name: 'Home', url: '/' },
+  //   { name: 'LandingPage Edit', url: `/edit/${req.params.id}/` },
+  // ];
 
   const { id } = req.params;
   const { title, about, description, socialMedia, email, phone, address } = req.body;
@@ -210,32 +208,32 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
     landing.footer.contact.address = address;
 
     await landing.save(); // Simpan perubahan pada instance dokumen
-    res.render('landingPage/landingEdit', {
+    res.json({
       landing,
       message: {
         status: 'success',
         pesan: `Landing Page berhasil diperbarui!`,
       },
-      breadcrumb,
-      isRoot: false,
-      user: req.user,
-      title: 'Landing Page Edit',
-      layout: 'index',
+      // breadcrumb,
+      // isRoot: false,
+      // user: req.user,
+      // title: 'Landing Page Edit',
+      // layout: 'index',
     });
   } catch (error) {
     console.error(error); // Log kesalahan untuk debugging
-    const landing = await LandingPage.find();
-    res.render('landingPage/landingEdit', {
+    // const landing = await LandingPage.find();
+    res.json({
       message: {
         status: 'error',
         pesan: `Landing Page gagal diperbarui!`,
       },
-      breadcrumb,
-      isRoot: false,
-      user: req.user,
-      title: 'Landing Page Edit',
-      layout: 'index',
-      landing: landing[0],
+      // breadcrumb,
+      // isRoot: false,
+      // user: req.user,
+      // title: 'Landing Page Edit',
+      // layout: 'index',
+      // landing: landing[0],
       error,
     });
   }

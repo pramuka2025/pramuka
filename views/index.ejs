@@ -72,6 +72,13 @@
         });
       });
       function showModal(title, description, imageUrl, createdAt) {
+        // Pengecekan untuk memastikan semua parameter tidak kosong
+        if (!title || !description || !imageUrl || !createdAt) {
+          console.error('Semua parameter harus diisi.');
+          alert('Semua parameter harus diisi.'); // Menampilkan pesan kesalahan kepada pengguna
+          return; // Keluar dari fungsi jika ada parameter yang kosong
+        }
+
         // Mengatur konten modal
         document.getElementById('staticBackdropLabel').innerText = title;
         document.getElementById('modalDescription').innerText = description;
@@ -83,9 +90,9 @@
         const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
         modal.show();
       }
-      function detaileInfo(id) {
-        window.location.href = `/info/${id}`;
-      }
+      // function detaileInfo(id) {
+      //   window.location.href = `/info/${id}`;
+      // }
     </script>
   </body>
 </html>
