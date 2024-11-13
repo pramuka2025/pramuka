@@ -1,6 +1,9 @@
 <div class="container">
   <h1>Edit Partisipan</h1>
-  <form action="/partisipans/e/<%= partisipan._id %>" method="POST">
+  <% if(!partisipans) {%>
+  <p class="alert alert-warning">Tidak ada perserta</p>
+  <% }else {%>
+  <form action="/partisipans/edit/<%= partisipan._id %>" method="POST">
     <div>Judul :</div>
     <input type="text" name="title" value="<%= partisipan.title %>" placeholder="Judul" required />
     <div id="pesertaContainer">
@@ -19,7 +22,7 @@
     <button class="btn btn-success mt-2 mb-2" type="button" onclick="addPeserta()">Add Peserta</button>
     <button class="btn btn-success mt-2 mb-2" type="submit">Update</button>
   </form>
-  <% if (message) { %>
+  <% } %> <% if (message) { %>
   <div id="responseMessage" style="color: green"><%= message %></div>
   <% } %>
 

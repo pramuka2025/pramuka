@@ -40,7 +40,7 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
     { name: 'Galery Foto', url: '/galery' },
     { name: 'Add', url: '/docadd' },
   ];
-  const imageUrl = `${process.env.BASE_URL}/${req.file.path}`; // Mendapatkan path gambar
+  const imageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`; // Mendapatkan path gambar
 
   const newDoc = new Doc({
     title,

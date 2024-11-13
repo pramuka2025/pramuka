@@ -54,7 +54,7 @@ router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
       landing: null,
     });
   }
-  const heroImageUrl = `${process.env.BASE_URL}/${req.file.filename}`;
+  const heroImageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`;
 
   const landingPage = new LandingPage({
     title,

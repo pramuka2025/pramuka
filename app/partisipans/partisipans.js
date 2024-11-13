@@ -50,7 +50,7 @@ router.get('/edit/:id', auth, async (req, res) => {
   }
 });
 
-router.post('/e/:id', auth, async (req, res) => {
+router.post('/edit/:id', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
     { name: 'Edit', url: `/partisipans/e/${req.params.id}` },

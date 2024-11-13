@@ -40,7 +40,7 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
     return res.status(400).json({ message: 'File tidak diupload' });
   }
 
-  const imageUrl = `${process.env.BASE_URL}/${req.file.path}`; // Mendapatkan path gambar
+  const imageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`; // Mendapatkan path gambar
 
   const newFeature = new Feature({
     title,
