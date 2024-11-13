@@ -59,12 +59,12 @@ router.get('/register', async (req, res) => {
 // });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  console.log(email, password);
+  const { emailLogin, password } = req.body;
+  console.log(emailLogin, password);
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid email' });
+    const user = await User.findOne({ emailLogin });
+    if (!user) return res.status(400).json({ message: 'Invalid emailLogin' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });

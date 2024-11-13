@@ -2,25 +2,17 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+
+const { v4: uuidv4 } = require('uuid');
 const fs = require('fs'); // Untuk menghapus file
 const Feature = require('./featuresModel');
 const LandingPage = require('../landingpage/landingSchema');
 const { auth } = require('../auth');
+const { ref, storage, getDownloadURL, uploadBytes, deleteObject } = require('../../firebase');
 
 const router = express.Router();
 
-// Setup storage untuk multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images'); // Folder untuk menyimpan gambar
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Menyimpan dengan nama unik
-  },
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/fituradd', auth, async (req, res) => {
   const breadcrumb = [
@@ -34,19 +26,34 @@ router.get('/fituradd', auth, async (req, res) => {
 // Route untuk menambah fitur
 router.post('/add', auth, upload.single('image'), async (req, res) => {
   const { title, description, content } = req.body;
-
+  const file = req.file;
   // Cek apakah file diupload
-  if (!req.file) {
+  if (file) {
     return res.status(400).json({ message: 'File tidak diupload' });
   }
 
-  const imageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`; // Mendapatkan path gambar
+  // const imageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`; // Mendapatkan path gambar
+
+  let image = '';
+  if (file) {
+    const imageRef = ref(storage, `images/${uuidv4()}-${file.originalname}`);
+    const metadata = {
+      contentType: file.mimetype,
+      customMetadata: {
+        description: `${title}`,
+      },
+      contentDisposition: 'inline; filename="' + file.originalname + '"',
+      cacheControl: 'public, max-age=31536000',
+    };
+    await uploadBytes(imageRef, file.buffer, metadata);
+    image = await getDownloadURL(imageRef);
+  }
 
   const newFeature = new Feature({
     title,
     description,
     content,
-    imageUrl,
+    imageUr: image,
   });
 
   console.log(newFeature);
@@ -125,29 +132,59 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
     }
 
     // Jika ada gambar baru, hapus gambar lama
-    if (req.file) {
-      // Menghapus bagian URL dari imageUrl menggunakan BASE_URL dari env
-      const oldImagePath = feature.imageUrl.replace(process.env.BASE_URL + '/', '');
-      const fullOldImagePath = path.join(__dirname, '../../', oldImagePath);
-      console.log('Attempting to delete old image at:', fullOldImagePath);
+    // if (req.file) {
+    //   // Menghapus bagian URL dari imageUrl menggunakan BASE_URL dari env
+    //   const oldImagePath = feature.imageUrl.replace(process.env.BASE_URL + '/', '');
+    //   const fullOldImagePath = path.join(__dirname, '../../', oldImagePath);
+    //   console.log('Attempting to delete old image at:', fullOldImagePath);
 
-      if (fs.existsSync(fullOldImagePath)) {
-        fs.unlink(fullOldImagePath, (err) => {
-          if (err) {
-            console.error('Gagal menghapus gambar lama:', err);
-          } else {
-            console.log('Gambar lama berhasil dihapus');
-          }
-        });
-      } else {
-        console.log('Gambar lama tidak ditemukan:', fullOldImagePath);
+    //   if (fs.existsSync(fullOldImagePath)) {
+    //     fs.unlink(fullOldImagePath, (err) => {
+    //       if (err) {
+    //         console.error('Gagal menghapus gambar lama:', err);
+    //       } else {
+    //         console.log('Gambar lama berhasil dihapus');
+    //       }
+    //     });
+    //   } else {
+    //     console.log('Gambar lama tidak ditemukan:', fullOldImagePath);
+    //   }
+
+    //   // Update imageUrl dengan gambar baru
+    //   feature.imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`; // Pastikan ini adalah path relatif
+    // }
+
+    const currentImage = feature.imageUrl;
+
+    const uploadImage = async (file) => {
+      if (!file) return null;
+
+      const imageRef = ref(storage, `images/${uuidv4()}-${file.originalname}`);
+      const metadata = {
+        contentType: file.mimetype,
+        customMetadata: {
+          description: `${landing.title}`,
+        },
+        contentDisposition: 'inline; filename="' + file.originalname + '"',
+        cacheControl: 'public, max-age=31536000',
+      };
+      await uploadBytes(imageRef, file.buffer, metadata);
+      return await getDownloadURL(imageRef);
+    };
+    const newImageUrl = await uploadImage(req.file);
+
+    // Hapus file lama jika ada
+    const deleteOldImage = async (imageUrl) => {
+      if (imageUrl) {
+        const oldImageRef = ref(storage, imageUrl); // Pastikan ini adalah referensi yang benar
+        await deleteObject(oldImageRef);
       }
+    };
 
-      // Update imageUrl dengan gambar baru
-      feature.imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`; // Pastikan ini adalah path relatif
-    }
-
+    if (req.file) await deleteOldImage(currentImage);
     // Update field lainnya
+    feature.imageUrl = newImageUrl;
+    S;
     feature.title = title;
     feature.description = description;
     feature.content = content;
@@ -182,14 +219,26 @@ router.delete('/delete/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Fitur tidak ditemukan' });
     }
 
-    // Hapus gambar dari server
-    const oldImagePath = feature.imageUrl.replace(process.env.BASE_URL + '/', '');
-    const imagePath = path.join(__dirname, '../../', oldImagePath);
-    fs.unlink(imagePath, (err) => {
-      if (err) {
-        console.error('Gagal menghapus gambar:', err);
+    // // Hapus gambar dari server
+    // const oldImagePath = feature.imageUrl.replace(process.env.BASE_URL + '/', '');
+    // const imagePath = path.join(__dirname, '../../', oldImagePath);
+    // fs.unlink(imagePath, (err) => {
+    //   if (err) {
+    //     console.error('Gagal menghapus gambar:', err);
+    //   }
+    // });
+
+    const currentImage = feature.imageUrl;
+
+    // Hapus file lama jika ada
+    const deleteOldImage = async (imageUrl) => {
+      if (imageUrl) {
+        const oldImageRef = ref(storage, imageUrl); // Pastikan ini adalah referensi yang benar
+        await deleteObject(oldImageRef);
       }
-    });
+    };
+
+    await deleteOldImage(currentImage);
 
     await Feature.findByIdAndDelete(id);
     res.json({ message: 'Fitur berhasil dihapus!' });

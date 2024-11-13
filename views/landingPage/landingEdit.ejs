@@ -66,6 +66,8 @@
     const id = JSON.parse(landingId);
     const formData = new FormData(form);
 
+    console.log(formData);
+
     // Validasi sederhana
     let isValid = true;
     formData.forEach((value, key) => {

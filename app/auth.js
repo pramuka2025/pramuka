@@ -11,7 +11,6 @@ const auth = async (req, res, next) => {
 
     // Simpan data pengguna ke dalam req
     req.user = user[0]; // Anda bisa menyimpan seluruh objek pengguna atau hanya yang diperlukan
-    console.log(user);
 
     next(); // Lanjutkan ke middleware atau rute berikutnya
   } catch (error) {
