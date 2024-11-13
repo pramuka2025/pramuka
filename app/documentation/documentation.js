@@ -151,7 +151,8 @@ router.post('/docedit/:id', auth, upload.single('image'), async (req, res) => {
     { name: 'Edit', url: `/doc/docedit/${id}` },
   ];
 
-  const landing = await LandingPage.find();
+  const file = req.file;
+
   try {
     const doc = await Doc.findById(id);
     if (!doc) {
@@ -160,29 +161,7 @@ router.post('/docedit/:id', auth, upload.single('image'), async (req, res) => {
 
     const currentImage = doc.imageUrl;
 
-    // // Jika ada gambar baru, hapus gambar lama
-    // if (req.file) {
-    //   // Menghapus bagian URL dari imageUrl menggunakan BASE_URL dari env
-    //   const oldImagePath = doc.imageUrl.replace(process.env.BASE_URL + '/', '');
-    //   const fullOldImagePath = path.join(__dirname, '../../', oldImagePath);
-    //   console.log('Attempting to delete old image at:', fullOldImagePath);
-
-    //   if (fs.existsSync(fullOldImagePath)) {
-    //     fs.unlink(fullOldImagePath, (err) => {
-    //       if (err) {
-    //         console.error('Gagal menghapus gambar lama:', err);
-    //       } else {
-    //         console.log('Gambar lama berhasil dihapus');
-    //       }
-    //     });
-    //   } else {
-    //     console.log('Gambar lama tidak ditemukan:', fullOldImagePath);
-    //   }
-
-    //   // Update imageUrl dengan gambar baru
-    //   doc.imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`; // Pastikan ini adalah path relatif
-    // }
-
+    // Fungsi untuk mengupload gambar
     const uploadImage = async (file) => {
       if (!file) return null;
 
@@ -190,17 +169,16 @@ router.post('/docedit/:id', auth, upload.single('image'), async (req, res) => {
       const metadata = {
         contentType: file.mimetype,
         customMetadata: {
-          description: `${landing.title}`,
+          description: title, // Menggunakan title yang baru
         },
-        contentDisposition: 'inline; filename="' + file.originalname + '"',
+        contentDisposition: `inline; filename="${file.originalname}"`,
         cacheControl: 'public, max-age=31536000',
       };
       await uploadBytes(imageRef, file.buffer, metadata);
       return await getDownloadURL(imageRef);
     };
-    const imageUrl = await uploadImage(req.file);
 
-    // Hapus file lama jika ada
+    // Fungsi untuk menghapus gambar lama
     const deleteOldImage = async (imageUrl) => {
       if (imageUrl) {
         const oldImageRef = ref(storage, imageUrl); // Pastikan ini adalah referensi yang benar
@@ -208,45 +186,35 @@ router.post('/docedit/:id', auth, upload.single('image'), async (req, res) => {
       }
     };
 
-    if (req.file) await deleteOldImage(currentImage);
+    // Jika ada gambar baru, hapus gambar lama dan upload gambar baru
+    if (file) {
+      await deleteOldImage(currentImage);
+      doc.imageUrl = await uploadImage(file);
+    }
 
     // Update field lainnya
-    doc.imageUrl = imageUrl;
     doc.title = title;
     doc.description = description;
 
     await doc.save(); // Simpan perubahan pada instance dokumen
-    res.render('doc/docEdit', {
+    res.json({
       doc,
       message: {
         status: 'success',
         pesan: `Documentation ${title} berhasil diperbarui!`,
       },
-      user: req.user,
-      breadcrumb,
-      isRoot: false,
-      title: 'Edit Documentation',
-      layout: 'index',
-      landing: landing[0],
     });
   } catch (error) {
-    console.error(error);
-    res.render('doc/docEdit', {
+    console.error('Error updating documentation:', error);
+    res.status(500).json({
       message: {
         status: 'error',
         pesan: `Documentation ${title} gagal diperbarui!`,
       },
-      user: req.user,
-      breadcrumb,
-      isRoot: false,
-      title: 'Edit Documentation',
-      layout: 'index',
-      landing: landing[0],
-      error,
+      error: error.message, // Menyertakan pesan error untuk informasi lebih lanjut
     });
   }
 });
-
 // Route untuk menghapus documentation
 router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;

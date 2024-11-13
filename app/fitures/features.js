@@ -14,7 +14,7 @@ const router = express.Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get('/fituradd', auth, async (req, res) => {
+router.get('/add', auth, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
     { name: 'Artikel & info', url: '/allinfo' },
@@ -27,33 +27,36 @@ router.get('/fituradd', auth, async (req, res) => {
 router.post('/add', auth, upload.single('image'), async (req, res) => {
   const { title, description, content } = req.body;
   const file = req.file;
+
   // Cek apakah file diupload
-  if (file) {
+  if (!file) {
     return res.status(400).json({ message: 'File tidak diupload' });
   }
 
-  // const imageUrl = `${process.env.BASE_URL}/${path.join('images', req.file.filename)}`; // Mendapatkan path gambar
+  let imageUrl = '';
+  const imageRef = ref(storage, `images/${uuidv4()}-${file.originalname}`);
+  const metadata = {
+    contentType: file.mimetype,
+    customMetadata: {
+      description: `${title}`,
+    },
+    contentDisposition: 'inline; filename="' + file.originalname + '"',
+    cacheControl: 'public, max-age=31536000',
+  };
 
-  let image = '';
-  if (file) {
-    const imageRef = ref(storage, `images/${uuidv4()}-${file.originalname}`);
-    const metadata = {
-      contentType: file.mimetype,
-      customMetadata: {
-        description: `${title}`,
-      },
-      contentDisposition: 'inline; filename="' + file.originalname + '"',
-      cacheControl: 'public, max-age=31536000',
-    };
+  try {
     await uploadBytes(imageRef, file.buffer, metadata);
-    image = await getDownloadURL(imageRef);
+    imageUrl = await getDownloadURL(imageRef);
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ message: 'Gagal mengupload gambar', error });
   }
 
   const newFeature = new Feature({
     title,
     description,
     content,
-    imageUr: image,
+    imageUrl: imageUrl, // Perbaiki menjadi imageUrl
   });
 
   console.log(newFeature);
@@ -61,18 +64,15 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
   try {
     await newFeature.save();
     res.json({
-      // Pastikan untuk menggunakan nama view yang valid
       message: {
         status: 'success',
         pesan: `Fitur ${title} berhasil ditambahkan!`,
       },
-
       feature: newFeature,
     });
   } catch (error) {
-    console.error('Error saving feature:', error); // Log error untuk debugging
-    res.json({
-      // Pastikan untuk menggunakan nama view yang valid
+    console.error('Error saving feature:', error);
+    res.status(500).json({
       message: {
         status: 'error',
         pesan: 'Fitur gagal ditambahkan',
@@ -81,7 +81,7 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
     });
   }
 });
-router.get('/fituredit/:id', auth, async (req, res) => {
+router.get('/edit/:id', auth, async (req, res) => {
   const { id } = req.params; // Mengambil ID dari URL params
   const breadcrumb = [
     { name: 'Home', url: '/' },
@@ -131,31 +131,9 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
       return res.status(404).json({ message: 'Fitur tidak ditemukan' });
     }
 
-    // Jika ada gambar baru, hapus gambar lama
-    // if (req.file) {
-    //   // Menghapus bagian URL dari imageUrl menggunakan BASE_URL dari env
-    //   const oldImagePath = feature.imageUrl.replace(process.env.BASE_URL + '/', '');
-    //   const fullOldImagePath = path.join(__dirname, '../../', oldImagePath);
-    //   console.log('Attempting to delete old image at:', fullOldImagePath);
-
-    //   if (fs.existsSync(fullOldImagePath)) {
-    //     fs.unlink(fullOldImagePath, (err) => {
-    //       if (err) {
-    //         console.error('Gagal menghapus gambar lama:', err);
-    //       } else {
-    //         console.log('Gambar lama berhasil dihapus');
-    //       }
-    //     });
-    //   } else {
-    //     console.log('Gambar lama tidak ditemukan:', fullOldImagePath);
-    //   }
-
-    //   // Update imageUrl dengan gambar baru
-    //   feature.imageUrl = `${process.env.BASE_URL}/images/${req.file.filename}`; // Pastikan ini adalah path relatif
-    // }
-
     const currentImage = feature.imageUrl;
 
+    // Fungsi untuk mengupload gambar baru
     const uploadImage = async (file) => {
       if (!file) return null;
 
@@ -163,7 +141,7 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
       const metadata = {
         contentType: file.mimetype,
         customMetadata: {
-          description: `${landing.title}`,
+          description: title, // Menggunakan title yang baru
         },
         contentDisposition: 'inline; filename="' + file.originalname + '"',
         cacheControl: 'public, max-age=31536000',
@@ -171,9 +149,8 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
       await uploadBytes(imageRef, file.buffer, metadata);
       return await getDownloadURL(imageRef);
     };
-    const newImageUrl = await uploadImage(req.file);
 
-    // Hapus file lama jika ada
+    // Fungsi untuk menghapus gambar lama
     const deleteOldImage = async (imageUrl) => {
       if (imageUrl) {
         const oldImageRef = ref(storage, imageUrl); // Pastikan ini adalah referensi yang benar
@@ -181,17 +158,19 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
       }
     };
 
-    if (req.file) await deleteOldImage(currentImage);
+    // Jika ada gambar baru, hapus gambar lama dan upload gambar baru
+    if (req.file) {
+      await deleteOldImage(currentImage);
+      feature.imageUrl = await uploadImage(req.file);
+    }
+
     // Update field lainnya
-    feature.imageUrl = newImageUrl;
-    S;
     feature.title = title;
     feature.description = description;
     feature.content = content;
 
     await feature.save();
     res.json({
-      // Pastikan untuk menggunakan nama view yang valid
       message: {
         status: 'success',
         pesan: `Fitur berhasil diedit!`,
@@ -199,16 +178,16 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
       feature,
     });
   } catch (error) {
+    console.error('Error editing feature:', error); // Log error untuk debugging
     res.status(500).json({
-      // Pastikan untuk menggunakan nama view yang valid
       message: {
         status: 'error',
         pesan: `Fitur gagal diedit!`,
       },
+      error: error.message, // Menyertakan pesan error untuk informasi lebih lanjut
     });
   }
 });
-
 // Route untuk menghapus fitur
 router.delete('/delete/:id', auth, async (req, res) => {
   const { id } = req.params;

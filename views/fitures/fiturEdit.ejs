@@ -1,10 +1,10 @@
 <div class="container">
   <h1>Edit Feature</h1>
-  <div id="responseMessage"></div>
-  <% if(!feature) {%>
-  <p class="alert alert-warning">artikel atau info tidak ada!</p>
-  <% } else {%>
-  <form id="featureForm" class="contin" action="/fitures/edit" method="post" enctype="multipart/form-data">
+  <div id="responseMessage" class="alert"></div>
+  <% if (!feature) { %>
+  <p class="alert alert-warning">Artikel atau info tidak ada!</p>
+  <% } else { %>
+  <form id="featureForm" class="contin" method="post" enctype="multipart/form-data">
     <input type="hidden" id="featureId" name="featureId" value="<%= feature._id %>" />
     <!-- Menyimpan ID fitur -->
 
@@ -20,12 +20,13 @@
     <label for="image">Image:</label>
     <input type="file" id="image" name="image" />
 
-    <button class="mt-1" type="submit">Update Feature</button>
+    <button class="mt-1 btn btn-success mb-3" type="submit">Update Feature</button>
   </form>
 
   <% } %>
-  <a class="btn btn-success mt-3 mb-3" href="/dashboard">Back to Home</a>
+  <a class="" href="/dashboard">Back to Home</a>
 </div>
+
 <script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
   tinymce.init({
@@ -36,33 +37,13 @@
     height: 300,
   });
 
-  // Mengambil ID dari URL
-  const pathSegments = window.location.pathname.split('/');
-  const featureId = pathSegments[pathSegments.length - 1]; // Mengambil ID dari bagian akhir URL
-
-  //   async function fetchFeatureData(featureId) {
-  //     try {
-  //       const response = await fetch(`/fitures/${featureId}`); // Endpoint untuk mendapatkan data fitur
-  //       const feature = await response.json();
-
-  //       // Mengisi form dengan data yang didapat
-  //       document.getElementById('featureId').value = feature.id;
-  //       document.getElementById('title').value = feature.title;
-  //       document.getElementById('description').value = feature.description;
-  //       tinymce.get('content').setContent(feature.content); // Mengisi konten TinyMCE
-  //     } catch (error) {
-  //       console.error('Error fetching feature data:', error);
-  //     }
-  //   }
-
-  //   fetchFeatureData(featureId); // Panggil fungsi untuk mengambil data
-
   document.getElementById('featureForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // Mencegah pengiriman formulir default
 
     const content = tinymce.get('content').getContent(); // Ambil konten dari TinyMCE
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
+    const featureId = document.getElementById('featureId').value; // Ambil ID fitur
 
     // Validasi: Pastikan konten tidak kosong
     if (!title || !description || !content) {
@@ -82,24 +63,28 @@
       const result = await response.json();
       const responseMessage = document.getElementById('responseMessage');
 
+      responseMessage.classList.remove('alert-success', 'alert-danger'); // Kosongkan kelas sebelumnya
+
       if (response.ok) {
         // Tampilkan pesan sukses
-        responseMessage.style.color = 'rgb(77, 244, 77)';
+        responseMessage.classList.add('alert-success');
         responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
 
+        // Mengisi kembali form dengan data terbaru
         document.getElementById('featureId').value = result.feature._id; // Pastikan ini sesuai dengan respons yang Anda terima
         document.getElementById('title').value = result.feature.title;
         document.getElementById('description').value = result.feature.description;
         tinymce.get('content').setContent(result.feature.content); // Mengisi konten TinyMCE dengan konten terbaru
       } else {
         // Tampilkan pesan error
-        responseMessage.style.color = 'rgb(244, 77, 77)';
+        responseMessage.classList.add('alert-danger');
         responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
       }
     } catch (error) {
       console.error('Error:', error);
       const responseMessage = document.getElementById('responseMessage');
-      responseMessage.style.color = 'rgb(244, 77, 77)';
+      responseMessage.classList.remove('alert-success'); // Hapus kelas sukses jika ada
+      responseMessage.classList.add('alert-danger');
       responseMessage.textContent = 'Gagal mengirim data';
     }
   });

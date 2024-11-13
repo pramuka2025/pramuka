@@ -90,7 +90,7 @@
     <!-- FITURE SECTION -->
     <section>
       <div class="fs-3 fw-bold" id="landing-page">Artikel & Info</div>
-      <a class="btn btn-primary btn-sm " href="/fitures/fituradd">Tambah artikel & info <span class="fw-bold">+</span></a>
+      <a class="btn btn-primary btn-sm " href="/fitures/add">Tambah artikel & info <span class="fw-bold">+</span></a>
       <table id="documentation" class="display w-100">
         <% if(!data.fiture){ %>
 <p class="alert-alert-danger"> tidak ada artikel atau info</p>
@@ -116,7 +116,7 @@
               <td><span class=""><%= dat.description %></span></td>
   
               <td class="">
-                <a class="btn btn-warning btn-sm mb-1" href="/fitures/fituredit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-warning btn-sm mb-1" href="/fitures/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
                     <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDeleteFitur('<%=dat._id%>')">
                     <i class="bi bi-trash-fill"></i>
                   </button>

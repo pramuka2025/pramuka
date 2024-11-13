@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Add New Feature</h1>
-  <div id="responseMessage"></div>
-  <form id="featureForm" class="contin" action="/fitures/add" method="post" enctype="multipart/form-data">
+  <div id="responseMessage" class="alert"></div>
+  <form id="featureForm" class="contin" method="post" enctype="multipart/form-data">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required />
 
@@ -17,8 +17,9 @@
 
     <button class="btn btn-success mt-3 mb-3" type="submit">Add Feature</button>
   </form>
-  <a class="mt-1" href="/dashboard">Back to Home</a>
+  <a class="mt-1" href="/dashboard">Back to Dashboard</a>
 </div>
+
 <script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
   tinymce.init({
@@ -54,9 +55,12 @@
       const result = await response.json();
       const responseMessage = document.getElementById('responseMessage');
 
+      // Kosongkan kelas sebelumnya
+      responseMessage.classList.remove('alert-success', 'alert-danger');
+
       if (response.ok) {
         // Tampilkan pesan sukses
-        responseMessage.style.color = 'rgb(77, 244, 77)';
+        responseMessage.classList.add('alert-success');
         responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
 
         // Kosongkan semua input dan textarea
@@ -66,13 +70,14 @@
         document.getElementById('image').value = ''; // Kosongkan input file (tidak bisa diakses secara langsung)
       } else {
         // Tampilkan pesan error
-        responseMessage.style.color = 'rgb(244, 77, 77)';
+        responseMessage.classList.add('alert-danger');
         responseMessage.textContent = result.message.pesan; // Ganti dengan pesan dari server
       }
     } catch (error) {
       console.error('Error:', error);
       const responseMessage = document.getElementById('responseMessage');
-      responseMessage.style.color = 'rgb (244, 77, 77)';
+      responseMessage.classList.remove('alert-success'); // Hapus kelas sukses jika ada
+      responseMessage.classList.add('alert-danger'); // Tambahkan kelas error
       responseMessage.textContent = 'Gagal mengirim data';
     }
   });
