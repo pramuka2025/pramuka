@@ -1,8 +1,6 @@
 <div class="container">
   <h1>Edit Landing Page</h1>
 
-  <div id="landingId" data-landing="<%= JSON.stringify(landing._id) %>"></div>
-
   <% if (!landing) { %>
   <p class="alert alert-warning">Landing data belum ada</p>
   <% } else { %>
@@ -62,8 +60,8 @@
 <script>
   document.getElementById('submitBtn').addEventListener('click', async () => {
     const form = document.getElementById('editForm');
-    const landingIdElement = document.getElementById('landingId');
-    const landingId = JSON.parse(landingIdElement.getAttribute('data-landing'));
+
+    const landingId = '<%= landing_id %>';
     const formData = new FormData(form);
 
     // Validasi sederhana
