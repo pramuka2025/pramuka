@@ -66,7 +66,7 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
     res.json({
       message: {
         status: 'success',
-        pesan: `Fitur ${title} berhasil ditambahkan!`,
+        pesan: `Artikel/info ${title} berhasil ditambahkan!`,
       },
       feature: newFeature,
     });
@@ -75,7 +75,7 @@ router.post('/add', auth, upload.single('image'), async (req, res) => {
     res.status(500).json({
       message: {
         status: 'error',
-        pesan: 'Fitur gagal ditambahkan',
+        pesan: 'Artikel/info gagal ditambahkan',
       },
       error,
     });
@@ -91,14 +91,14 @@ router.get('/edit/:id', auth, async (req, res) => {
   try {
     const feature = await Feature.findById(id); // Mencari fitur berdasarkan ID
     if (!feature) {
-      return res.status(404).json({ message: 'Fitur tidak ditemukan' });
+      return res.status(404).json({ message: 'Artikel/info tidak ditemukan' });
     }
     const landing = await LandingPage.find();
     res.render('fitures/fiturEdit', {
       // Pastikan untuk menggunakan nama view yang valid
       message: {
         status: 'success',
-        pesan: `Fitur berhasil diedit!`,
+        pesan: `Artikel/info berhasil diedit!`,
       },
       user: req.user,
       feature,
@@ -106,7 +106,7 @@ router.get('/edit/:id', auth, async (req, res) => {
       layout: 'index',
       breadcrumb,
       isRoot: false,
-      title: 'Artic Edit',
+      title: 'Artikel/info Edit',
     }); // Mengembalikan data fitur dalam format JSON
   } catch (error) {
     console.error('Error fetching feature:', error);
@@ -114,7 +114,7 @@ router.get('/edit/:id', auth, async (req, res) => {
       // Pastikan untuk menggunakan nama view yang valid
       message: {
         status: 'error',
-        pesan: `Fitur gagal diedit!`,
+        pesan: `Artikel/info gagal diedit!`,
       },
       error,
     });
@@ -128,7 +128,7 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
   try {
     const feature = await Feature.findById(id);
     if (!feature) {
-      return res.status(404).json({ message: 'Fitur tidak ditemukan' });
+      return res.status(404).json({ message: 'Artikel/info tidak ditemukan' });
     }
 
     const currentImage = feature.imageUrl;
@@ -173,7 +173,7 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
     res.json({
       message: {
         status: 'success',
-        pesan: `Fitur berhasil diedit!`,
+        pesan: `Artikel/info berhasil diedit!`,
       },
       feature,
     });
@@ -182,7 +182,7 @@ router.post('/edit/:id', auth, upload.single('image'), async (req, res) => {
     res.status(500).json({
       message: {
         status: 'error',
-        pesan: `Fitur gagal diedit!`,
+        pesan: `Artikel/info gagal diedit!`,
       },
       error: error.message, // Menyertakan pesan error untuk informasi lebih lanjut
     });

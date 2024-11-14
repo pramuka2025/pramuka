@@ -1,9 +1,9 @@
 <div class="container">
   <h1>Add New Documentation</h1>
   <% if (message) { %> <% if (message.status === 'error') { %>
-  <div id="responseMessage" style="color: rgb(244, 77, 77)"><%= message.pesan %></div>
+  <div id="responseMessage" class="alert alert-danger"><%= message.pesan %></div>
   <% } else if (message.status === 'success') { %>
-  <div id="responseMessage" style="color: rgb(77, 244, 77)"><%= message.pesan %></div>
+  <div id="responseMessage" class="alert alert-success"><%= message.pesan %></div>
   <% } %> <% } %>
   <form action="/doc/add" method="post" class="contin" enctype="multipart/form-data">
     <label for="title">Title:</label>
