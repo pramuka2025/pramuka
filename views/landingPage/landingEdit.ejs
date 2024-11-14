@@ -20,7 +20,7 @@
 
     <label for="heroImage">Upload Gambar:</label>
     <input type="file" id="heroImage" name="heroImage" />
-    <img src="<%= landing.heroSection.image.url %>" style="width: 70px; height: 70px" />
+    <img src="<%= landing.heroSection.image.url %>" alt="Gambar Hero" style="width: 70px; height: 70px" />
 
     <label for="heroImageAlt">Teks Alt Gambar:</label>
     <input type="text" id="heroImageAlt" name="heroImageAlt" value="<%= landing.heroSection.image.alt %>" required />
@@ -52,6 +52,7 @@
 
     <label for="address">Address:</label>
     <input type="text" id="address" name="address" value="<%= landing.footer.contact.address %>" required />
+
     <div id="responseMessage" class="alert m-0"></div>
     <button class="btn btn-success mb-4" type="button" id="submitBtn">Edit Landing Page</button>
   </form>
@@ -61,12 +62,9 @@
 <script>
   document.getElementById('submitBtn').addEventListener('click', async () => {
     const form = document.getElementById('editForm');
-    const landing = document.getElementById('landingId');
-    const landingId = landing.getAttribute('data-landing');
-    const id = JSON.parse(landingId);
+    const landingIdElement = document.getElementById('landingId');
+    const landingId = JSON.parse(landingIdElement.getAttribute('data-landing'));
     const formData = new FormData(form);
-
-    console.log(formData);
 
     // Validasi sederhana
     let isValid = true;
@@ -80,7 +78,7 @@
     if (!isValid) return;
 
     try {
-      const response = await fetch(`/landing/edit/${id}`, {
+      const response = await fetch(`/landing/edit/${landingId}`, {
         method: 'POST',
         body: formData,
       });
@@ -90,11 +88,11 @@
       // Menampilkan pesan berdasarkan hasil
       const responseMessage = document.getElementById('responseMessage');
       responseMessage.classList.remove('alert-success', 'alert-danger'); // Menghapus kelas sebelumnya
-      if (result.ok) {
+      if (result.message.status === 'success') {
         responseMessage.classList.add('alert-success');
         responseMessage.innerText = result.message.pesan;
       } else {
-        responseMessage.classList.add('alert-success');
+        responseMessage.classList.add('alert-danger');
         responseMessage.innerText = result.message.pesan;
       }
     } catch (error) {

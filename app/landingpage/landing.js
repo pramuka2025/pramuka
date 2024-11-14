@@ -161,7 +161,6 @@ router.get('/edit/:id', auth, async (req, res) => {
   }
 });
 
-// Update - Memperbarui Landing Page berdasarkan ID
 router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
   const { id } = req.params;
   const { title, about, description, socialMedia, email, phone, address } = req.body;
@@ -169,33 +168,12 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
   try {
     const landing = await LandingPage.findById(id);
     if (!landing) {
-      return res.status(404).json({ message: 'landingumentation tidak ditemukan' });
+      return res.status(404).json({ message: 'Landing page tidak ditemukan' });
     }
 
     const currentImage = landing.heroSection.image.url;
-    // Jika ada gambar baru, hapus gambar lama
-    // if (req.file) {
-    //   // Menghapus bagian URL dari imageUrl menggunakan BASE_URL dari env
-    //   const oldImagePath = landing.heroSection.image.url.replace(process.env.BASE_URL + '/', '');
-    //   const fullOldImagePath = path.join(__dirname, '../../', oldImagePath);
-    //   console.log('Attempting to delete old image at:', fullOldImagePath);
 
-    //   if (fs.existsSync(fullOldImagePath)) {
-    //     fs.unlink(fullOldImagePath, (err) => {
-    //       if (err) {
-    //         console.error('Gagal menghapus gambar lama:', err);
-    //       } else {
-    //         console.log('Gambar lama berhasil dihapus');
-    //       }
-    //     });
-    //   } else {
-    //     console.log('Gambar lama tidak ditemukan:', fullOldImagePath);
-    //   }
-
-    //   // Update imageUrl dengan gambar baru
-    //   landing.heroSection.image.url = `${process.env.BASE_URL}/images/${req.file.filename}`; // Pastikan ini adalah path relatif
-    // }
-
+    // Fungsi untuk mengupload gambar baru
     const uploadImage = async (file) => {
       if (!file) return null;
 
@@ -205,15 +183,14 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
         customMetadata: {
           description: `${landing.title}`,
         },
-        contentDisposition: 'inline; filename="' + file.originalname + '"',
+        contentDisposition: `inline; filename="${file.originalname}"`,
         cacheControl: 'public, max-age=31536000',
       };
       await uploadBytes(imageRef, file.buffer, metadata);
       return await getDownloadURL(imageRef);
     };
-    const newImageUrl = await uploadImage(req.file);
 
-    // Hapus file lama jika ada
+    // Hapus gambar lama jika ada
     const deleteOldImage = async (imageUrl) => {
       if (imageUrl) {
         const oldImageRef = ref(storage, imageUrl); // Pastikan ini adalah referensi yang benar
@@ -221,41 +198,41 @@ router.post('/edit/:id', auth, upload.single('heroImage'), async (req, res) => {
       }
     };
 
-    if (req.file) await deleteOldImage(currentImage);
+    let newImageUrl = currentImage; // Tetapkan default ke gambar saat ini
+    if (req.file) {
+      // Upload gambar baru dan hapus gambar lama
+      newImageUrl = await uploadImage(req.file);
+      await deleteOldImage(currentImage);
+    }
+
     // Update field lainnya
     landing.title = title;
     landing.about = about;
     landing.description = description;
     landing.heroSection.image.url = newImageUrl;
-    landing.heroSection.image.alt = req.body.heroImageAlt;
-    landing.heroSection.ctaButton.description = req.body.ctaButtonDescription;
-    landing.heroSection.ctaButton.text = req.body.ctaButtonText;
-    landing.heroSection.ctaButton.link = req.body.ctaButtonLink;
-    landing.socialMedia = socialMedia;
-    landing.footer.contact.email = email;
-    landing.footer.contact.phone = phone;
-    landing.footer.contact.address = address;
+    landing.heroSection.image.alt = req.body.heroImageAlt || landing.heroSection.image.alt; // Jika tidak ada alt baru, gunakan yang lama
+    landing.heroSection.ctaButton.description = req.body.ctaButtonDescription || landing.heroSection.ctaButton.description; // Jika tidak ada deskripsi baru, gunakan yang lama
+    landing.heroSection.ctaButton.text = req.body.ctaButtonText || landing.heroSection.ctaButton.text; // Jika tidak ada teks baru, gunakan yang lama
+    landing.heroSection.ctaButton.link = req.body.ctaButtonLink || landing.heroSection.ctaButton.link; // Jika tidak ada link baru, gunakan yang lama
+    landing.socialMedia = socialMedia || landing.socialMedia; // Jika tidak ada social media baru, gunakan yang lama
+    landing.footer.contact.email = email || landing.footer.contact.email; // Jika tidak ada email baru, gunakan yang lama
+    landing.footer.contact.phone = phone || landing.footer.contact.phone; // Jika tidak ada telepon baru, gunakan yang lama
+    landing.footer.contact.address = address || landing.footer.contact.address; // Jika tidak ada alamat baru, gunakan yang lama
 
     await landing.save(); // Simpan perubahan pada instance dokumen
     res.json({
       landing,
       message: {
         status: 'success',
-        pesan: `Landing Page berhasil diperbarui!`,
+        pesan: 'Landing Page berhasil diperbarui!',
       },
-      // breadcrumb,
-      // isRoot: false,
-      // user: req.user,
-      // title: 'Landing Page Edit',
-      // layout: 'index',
     });
   } catch (error) {
     console.error(error); // Log kesalahan untuk debugging
-    // const landing = await LandingPage.find();
-    res.json({
+    res.status(500).json({
       message: {
         status: 'error',
-        pesan: `Landing Page gagal diperbarui!`,
+        pesan: 'Landing Page gagal diperbarui!',
       },
       error,
     });
@@ -271,15 +248,6 @@ router.delete('/delete/:id', auth, async (req, res) => {
     if (!landing) {
       return res.status(404).json({ message: 'landing tidak ditemukan' });
     }
-
-    // // Hapus gambar dari server
-    // const oldImagePath = landing.heroSection.image.url.replace(process.env.BASE_URL + '/', '');
-    // const imagePath = path.join(__dirname, '../../', oldImagePath);
-    // fs.unlink(imagePath, (err) => {
-    //   if (err) {
-    //     console.error('Gagal menghapus gambar:', err);
-    //   }
-    // });
     const currentImage = landing.heroSection.image.url;
 
     // Hapus file lama jika ada
