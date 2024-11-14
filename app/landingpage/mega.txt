@@ -1,0 +1,142 @@
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const router = express.Router();
+const LandingPage = require('./landingSchema'); // Pastikan path ini sesuai dengan struktur folder Anda
+const { auth } = require('../auth');
+const mega = require('mega'); // Import mega
+
+// Konfigurasi multer untuk menyimpan file di memory
+const upload = multer({ storage: multer.memoryStorage() });
+
+// Route untuk menampilkan halaman tambah landing page
+router.get('/landingadd', auth, async (req, res) => {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Add', url: '' },
+  ];
+  const landing = await LandingPage.find();
+
+  res.render('landingPage/landingAdd', { user: req.user, breadcrumb, isRoot: false, message: null, title: 'Landing Page Create', layout: 'index', landing: landing[0] });
+});
+
+// Create - Menambahkan Landing Page baru
+router.post('/add', auth, upload.single('heroImage'), async (req, res) => {
+  const { title, about, description, socialMedia, email, phone, address } = req.body;
+
+  const file = req.file;
+
+  // Cek keberadaan file
+  if (!file) {
+    return res.json({
+      message: {
+        status: 'error',
+        pesan: 'Gambar tidak diupload!',
+      },
+      breadcrumb,
+      isRoot: false,
+      user: req.user,
+      title: 'Landing Page Create',
+      layout: 'index',
+      landing: null,
+    });
+  }
+
+  // Upload file ke Mega.nz
+  const megaClient = mega({ email: 'your-email@example.com', password: 'your-password' });
+
+  megaClient.on('ready', async () => {
+    try {
+      const uploadResult = await megaClient.upload(file.buffer, file.originalname);
+      const heroImageUrl = `https://mega.nz/file/${uploadResult.fileId}`; // Membuat URL file
+
+      const landingPage = new LandingPage({
+        title,
+        about,
+        description,
+        heroSection: {
+          image: {
+            url: heroImageUrl,
+            alt: req.body.heroImageAlt,
+          },
+          ctaButton: {
+            description: req.body.ctaButtonDescription,
+            text: req.body.ctaButtonText,
+            link: req.body.ctaButtonLink,
+          },
+        },
+        socialMedia,
+        footer: {
+          contact: {
+            email,
+            phone,
+            address,
+          },
+        },
+      });
+
+      const savedLandingPage = await landingPage.save();
+      res.json({
+        savedLandingPage,
+        message: {
+          status: 'success',
+          pesan: `Landing Page berhasil dibuat!`,
+        },
+      });
+    } catch (error) {
+      console.error('Error uploading to Mega:', error);
+      res.json({
+        message: {
+          status: 'error',
+          pesan: `Landing Page gagal dibuat! ${error}`,
+        },
+      });
+    } finally {
+      megaClient.logout(); // Logout dari Mega setelah selesai
+    }
+  });
+});
+
+// Rute untuk menampilkan halaman edit
+router.get('/edit/:id', auth, async (req, res) => {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'LandingPage Edit', url: '/edit' },
+  ];
+
+  const landing = await LandingPage.findById(req.params.id);
+
+  try {
+    if (!landing) {
+      return res.status(404).send('Landing page not found');
+    }
+    res.render('landingPage/landingEdit', {
+      user: req.user,
+      breadcrumb,
+      isRoot: false,
+      message: null,
+      title: 'Landing Page Edit',
+      layout: 'index',
+      landing: landing,
+    });
+  } catch (error) {
+    console.error(error);
+    res.render('landingPage/landingEdit', {
+      user: req.user,
+      breadcrumb,
+      isRoot: false,
+      message: {
+        status: 'success',
+        pesan: `Landing Page gagalditemukan! ${error}`,
+      },
+      title: 'Landing Page Edit',
+      layout: 'index',
+      landing: null,
+    });
+  }
+});
+
+// Export router
+module.exports = router;
