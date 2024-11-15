@@ -20,34 +20,38 @@
         <% if ( !data.menu ){ %>
         <p class="alert alert-warning">tidak ada menu</p>
           <% } else { %>
-            <table id="partisipans" class="display w-100">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Judul</th>
-                  <th>Link</th>
-                  <th>Action</th>
+         <div class="container w-100">
+          <table id="menu" class="display ">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Judul</th>
+                <th>Link</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+          
+              <% data.menu.forEach((dat, index) => { %>
+                <tr class="text-warp">
+                  <td class="text-center"><%= index + 1 %></td>
+                  <!-- Menampilkan nomor urut -->
+                  <td><%= dat.title %></td>
+                  <td ><a class="text-warp" href="<%= dat.link %>">
+                    link klik disini untuk detale...
+                  </a></td>
+                  <td class="">
+                      <a class="btn btn-warning btn-sm mb-1" href="/menu/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
+                             <button type="submit" class="btn btn-danger btn-sm" onclick="menuDeleteDoc('<%= dat._id %>')">
+                          <i class="bi bi-trash-fill"></i>
+                        </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-            
-                <% data.menu.forEach((dat, index) => { %>
-                  <tr>
-                    <td><%= index + 1 %></td>
-                    <!-- Menampilkan nomor urut -->
-                    <td><%= dat.title %></td>
-                    <td><%= dat.link %></td>
-                    <td class="">
-                        <a class="btn btn-warning btn-sm mb-1" href="/menu/edit/<%= dat._id%>"><i class="bi bi-pencil-square"></i></a>
-                               <button type="submit" class="btn btn-danger btn-sm" onclick="menuDeleteDoc('<%= dat._id %>')">
-                            <i class="bi bi-trash-fill"></i>
-                          </button>
-                    </td>
-                  </tr>
-                <% }) %>
-       
-        </tbody>
-      </table>
+              <% }) %>
+     
+      </tbody>
+    </table>
+         </div>
       <% } %>
     </section>
     <!-- DOCUMENTATION SECTION -->
@@ -70,7 +74,7 @@
         <tbody>
           <% data.doc.forEach((dat, index) => { %>
             <tr>
-              <td><%= index + 1 %></td>
+              <td class="text-center"><%= index + 1 %></td>
               <!-- Menampilkan nomor urut -->
               <td ><%= dat.title %></td>
               <td><img src="<%= dat.imageUrl %>" style="width: 40px; height: 40px" alt="<%= dat.title %>" /></td>

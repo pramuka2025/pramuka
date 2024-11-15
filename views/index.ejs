@@ -71,6 +71,12 @@
           pageLength: 5,
         });
       });
+      $(document).ready(function () {
+        $('#menu').DataTable({
+          responsive: true, // Mengaktifkan responsif
+          pageLength: 5,
+        });
+      });
       function showModal(title, description, imageUrl, createdAt) {
         // Pengecekan untuk memastikan semua parameter tidak kosong
         if (!title || !description || !imageUrl || !createdAt) {

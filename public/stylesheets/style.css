@@ -101,3 +101,8 @@
 .text-b {
   font-size: 12px;
 }
+
+.border-left {
+  border: 1px solid blue;
+  border-left: 4px solid var(--brown);
+}

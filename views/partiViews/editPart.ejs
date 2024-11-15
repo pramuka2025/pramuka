@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Edit Partisipan</h1>
-  <% if(!partisipans) {%>
+  <% if(!partisipan) {%>
   <p class="alert alert-warning">Tidak ada perserta</p>
   <% }else {%>
   <form action="/partisipans/edit/<%= partisipan._id %>" method="POST">
@@ -18,12 +18,14 @@
       </div>
       <% }); %>
     </div>
-
+    <div>
+      <% if (message) { %>
+      <div id="responseMessage" class="alert alert-success"><%= message %></div>
+      <% }%>
+    </div>
     <button class="btn btn-success mt-2 mb-2" type="button" onclick="addPeserta()">Add Peserta</button>
     <button class="btn btn-success mt-2 mb-2" type="submit">Update</button>
   </form>
-  <% } %> <% if (message) { %>
-  <div id="responseMessage" style="color: green"><%= message %></div>
   <% } %>
 
   <a href="/dashboard">Back to Dashboard</a>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <style>
+        .sub-akredetasi {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Files</h1>
+    <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/upload">
+        <label for="title">Akredetasi Title:</label>
+        <input type="text" name="title" required><br><br>
+        <label for="file_acredetasi">Upload File:</label>
+        <input type="file" name="files" required>
+       
+
+        <div id="subAkredetasiContainer">
+            <div class="sub-akredetasi">
+                <label for="sub_title">Sub Akredetasi Title:</label>
+                <input type="text" name="sub_akredetasi[0][title]" required>
+                <label for="sub_file">Upload File:</label>
+                <input type="file" name="files" required>
+                <button type="button" class="remove-sub-akredetasi">Remove</button>
+            </div>
+        </div>
+        <button type="button" id="addSubAkredetasi">Add Sub Akredetasi</button><br><br>
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById('addSubAkredetasi').addEventListener('click', function() {
+            const container = document.getElementById('subAkredetasiContainer');
+            const index = container.children.length; // Mengetahui berapa banyak sub akredetasi yang ada
+            const newSubAkredetasi = document.createElement('div');
+            newSubAkredetasi.classList.add('sub-akredetasi');
+            newSubAkredetasi.innerHTML = `
+                <label for="sub_title">Sub Akredetasi Title:</label>
+                <input type="text" name="sub_akredetasi[${index}][title]" required>
+                <label for="sub_link">Link:</label>
+                <input type="text" name="sub_akredetasi[${index}][link]" required>
+                <label for="sub_file">Upload File:</label>
+                <input type="file" name="files" required>
+                <button type="button" class="remove-sub-akredetasi">Remove</button>
+            `;
+            container.appendChild(newSubAkredetasi);
+        });
+
+        // Event delegation to handle remove button
+        document.getElementById('subAkredetasiContainer').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-sub-akredetasi')) {
+                e.target.parentElement.remove();
+            }
+        });
+    </script>
+</body>
+</html>

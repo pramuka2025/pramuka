@@ -28,18 +28,23 @@
   </section>
 
   <!-- menu -->
+  <% if (data.menu.length === 0) { %>
+  <p></p>
+  <% } else { %>
   <section>
     <div class="card border-1 border-dark mt-2">
       <div class="card-body text-center">
-        <% if (data.menu.length === 0) { %>
-        <p class="alert alert-warning">Tidak ada menu yang tersedia.</p>
-        <% } else { %> <% data.menu.forEach(dat => { %>
-        <a class="btn btn-outline-dark btn-sm" href="<%= dat.link %>"><%= dat.title %></a>
-        <% }) %> <% } %>
+        <% data.menu.forEach(dat => { %>
+        <a class="btn btn-outline-dark btn-sm me-1 mb-1" href="<%= dat.link %>"><%= dat.title %></a>
+        <% }) %>
       </div>
     </div>
   </section>
+  <% } %>
   <!-- Galery -->
+  <% if (data.doc.length === 0) { %>
+  <div></div>
+  <% } else { %>
   <section>
     <div class="d-flex justify-content-between mb-2 mt-2">
       <div class="fw-bold">Galery Foto :</div>
@@ -48,14 +53,11 @@
       </div>
     </div>
     <div class="row w-100">
-      <% if (data.doc.length === 0) { %>
-      <div class="col-12 alert alert-warning text-center">Tidak ada galeri foto yang tersedia.</div>
-
-      <% } else { %> <% data.doc.reverse().slice(0, 5).forEach(dat => { %>
+      <% data.doc.reverse().slice(0, 5).forEach(dat => { %>
       <div class="col-6 m-0 p-2">
         <div class="card border-1 border-brown pointer" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
           <div class="position-relative">
-            <img src="<%= dat.imageUrl %>" class="card-img-top" style="object-fit: cover; height: 100px" alt="<%= dat.title %>" />
+            <img src="<%= dat.imageUrl %>" class="card-img-top" style="object-fit: cover; height: 150px" alt="<%= dat.title %>" />
             <div class="overlay"></div>
           </div>
           <div class="card-body m-0 p-0 ps-2 pe-2">
@@ -64,9 +66,10 @@
           </div>
         </div>
       </div>
-      <% }); %> <% } %>
+      <% }); %>
     </div>
   </section>
+  <% } %>
   <!-- Artikel & Info -->
   <section>
     <div class="d-flex justify-content-between mb-2 mt-2">
@@ -80,7 +83,7 @@
       <% data.fiture.reverse().slice(0, 4).forEach(artikel => { %>
       <div class="card mb-1 border-1 border-dark" onclick="detaileInfo('<%= artikel._id %>')">
         <div class="row g-0">
-          <div class="col-4">
+          <div class="col-5">
             <img src="<%= artikel.imageUrl %>" class="img-fluid rounded-start p-1" style="object-fit: cover; height: 100%" alt="<%= artikel.title %>" />
           </div>
           <div class="col">
@@ -100,36 +103,25 @@
     <% } %>
   </section>
   <!-- Peserta -->
+  <% if (data.partisipans.length === 0) { %>
+  <div></div>
+  <% }else {%>
   <section>
     <div class="d-flex justify-content-center mb-1 mt-3">
-      <div class="fw-bold">Organisasi & Peserta Pramuka :</div>
+      <div class="fw-bold">Majelis Pembibing Gugus Depan :</div>
     </div>
-
-    <table class="table table-bordered border-primary">
-      <thead>
-        <tr>
-          <% if (data.partisipans.length === 0) { %>
-          <th class="alert alert-warning">Tidak ada data</th>
-
-          <% } else { %> <% data.partisipans.forEach((parti)=> { %>
-          <th class="bg-warning"><%= parti.title %></th>
-          <% }) %> <% } %>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <% if (data.partisipans.length === 0) { %>
-
-          <td class="alert alert-warning">Tidak ada data</td>
-          <% }else{ %> <% data.partisipans.forEach((parti,index)=> { %>
-          <td class="m-2">
-            <% parti.peserta.forEach((peserta) => { %>
-            <div><i class="bi bi-check-circle-fill text-success me-1"></i><%= peserta %></div>
-            <% }); %>
-          </td>
-          <% }) %> <% } %>
-        </tr>
-      </tbody>
-    </table>
+    <div class="container">
+      <div class="row m-3">
+        <% data.partisipans.forEach((parti)=> { %>
+        <div class="col-12 border-left m-0 me-1 mb-1 p-0">
+          <div class="fw-bold bg-warning p-2 ps-2"><%= parti.title %></div>
+          <% parti.peserta.forEach((peserta) => { %>
+          <div class="p-2"><i class="bi bi-check-circle-fill text-success me-1"></i><%= peserta %></div>
+          <% }); %>
+        </div>
+        <% }) %>
+      </div>
+    </div>
   </section>
+  <% } %>
 </div>
