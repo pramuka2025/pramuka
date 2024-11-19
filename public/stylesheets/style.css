@@ -64,13 +64,13 @@
   text-overflow: ellipsis;
 }
 .text-ellipsis-2 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
 
-  text-overflow: ellipsis;
-  font-size: small;
+  text-overflow: ellipsis !important;
+  font-size: small !important;
 }
 .image-container {
   position: relative;
@@ -96,9 +96,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7) !important;
   z-index: 1;
 }
+
 .text {
   position: absolute; /* Memposisikan teks di atas overlay */
   top: 50%;

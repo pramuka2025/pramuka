@@ -12,12 +12,15 @@
   <div class="fw-bold"><%= category %></div>
   <hr />
   <section id="galery">
+    <% function convertToPreviewLink(driveLink) { if (driveLink.includes('/view')) { return driveLink.replace('/view', '/preview'); } else { return "Link tidak valid. Pastikan link mengandung '/view'."; } } %>
+
     <div class="row" data-doc="<%= JSON.stringify(akredetasi) %>" id="data">
       <% akredetasi.forEach(dat => {%>
       <div class="col-6 m-0 p-2 d-flex justify-content-start article-card">
         <div class="card border-1 border-brown pointer galery-card" style="min-height: 140px">
           <div class="position-relative">
-            <iframe src="<%= dat.link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
+            <% let link = convertToPreviewLink(dat.link) %>
+            <iframe src="<%= link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
             <div class="overlay-solid"></div>
           </div>
           <div class="card-body m-0 p-0 ps-2 pe-2">

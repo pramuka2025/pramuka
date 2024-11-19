@@ -73,7 +73,10 @@
   <% } %> <% if (data.akredetasi.length === 0) { %>
   <div></div>
   <% } else { %>
+
   <section>
+    <% function convertToPreviewLink(driveLink) { if (driveLink.includes('/view')) { return driveLink.replace('/view', '/preview'); } else { return "Link tidak valid. Pastikan link mengandung '/view'."; } } %>
+
     <div class="d-flex justify-content-between mb-2 mt-2">
       <div class="fw-bold">Akredetasi :</div>
       <div class="">
@@ -85,7 +88,8 @@
       <div class="col-6 m-0 p-2">
         <div class="card border-1 border-brown pointer" style="min-height: 140px">
           <div class="position-relative">
-            <iframe src="<%= dat.link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
+            <% let link = convertToPreviewLink(dat.link) %>
+            <iframe src="<%= link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
             <div class="overlay-solid"></div>
           </div>
           <div class="card-body m-0 p-0 ps-2 pe-2">
@@ -93,13 +97,11 @@
               <p class="text-b text-ellipsis-2"><%= dat.title %></p>
               <div class="d-flex justify-content-center">
                 <img src="../images/drive.png" style="width: 25px; height: 25px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-6 me-2 text-danger"></i>
-                <p><a class="text-b" target="_blank" href="<%= dat.link  %>">link</a></p>
+                <p><a class="text-b" target="_blank" href="<%= dat.link  %>">preview..!</a></p>
               </div>
             </div>
-            <div class="m-0 p-0">
-              <p class="p-0 m-0 text-b text-ellipsis"><%= dat.category %></p>
-              <a class="p-0 m-0 text-b" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
-            </div>
+            <p class="p-0 m-0 text-b text-ellipsis mt-1"><%= dat.category %></p>
+            <a class="p-0 m-0 text-b mb-1" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
           </div>
         </div>
       </div>
