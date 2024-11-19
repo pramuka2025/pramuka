@@ -1,49 +1,70 @@
-<main>
-  <h2>Form Tambah Akredetasi</h2>
-  <div id="message" class="alert" style="display: none"></div>
-  <!-- Tempat untuk menampilkan pesan -->
+<div class="container">
+  <main>
+    <h2>Form Tambah Akredetasi</h2>
+    <div id="message" class="alert" style="display: none"></div>
+    <!-- Tempat untuk menampilkan pesan -->
 
-  <form id="akredetasiForm" enctype="multipart/form-data">
-    <div>
-      <label for="title">Judul:</label>
-      <input type="text" id="title" name="title" required />
-    </div>
-    <div>
-      <label for="category">Kategori:</label>
-      <input type="text" id="category" name="category" required />
-    </div>
-    <div>
-      <label for="image">File (PDF):</label>
-      <input type="file" id="image" name="image" accept="application/pdf" required />
-    </div>
-    <div>
-      <button type="submit">Simpan</button>
-    </div>
-  </form>
-</main>
-
+    <form id="akredetasiForm" enctype="multipart/form-data">
+      <div>
+        <label for="title">Judul:</label>
+        <input type="text" id="title" name="title" required />
+      </div>
+      <div>
+        <label for="category">Kategori:</label>
+        <input type="text" id="category" name="category" required />
+      </div>
+      <div>
+        <label for="image">File (PDF):</label>
+        <input type="file" id="image" name="image" accept="application/pdf" required />
+      </div>
+      <div>
+        <button type="submit" id="submitButton">Simpan</button>
+      </div>
+    </form>
+  </main>
+</div>
 <script>
   document.getElementById('akredetasiForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // Mencegah pengiriman form default
 
     const formData = new FormData(this);
-    const response = await fetch('/akredetasi/add', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const result = await response.json();
+    const submitButton = document.getElementById('submitButton');
     const messageDiv = document.getElementById('message');
 
-    if (response.ok) {
+    // Mengubah teks tombol menjadi "Loading..."
+    submitButton.textContent = 'Loading...';
+    submitButton.disabled = true; // Menonaktifkan tombol saat loading
+
+    try {
+      const response = await fetch('/akredetasi/add', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        messageDiv.style.display = 'block';
+        messageDiv.textContent = result.status; // Menampilkan pesan sukses
+        messageDiv.style.color = 'green'; // Mengubah warna teks menjadi hijau
+
+        // Redirect ke halaman /dashboard setelah beberapa detik
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 2000);
+      } else {
+        messageDiv.style.display = 'block';
+        messageDiv.textContent = result.message || 'Terjadi kesalahan, silakan coba lagi.'; // Menampilkan pesan error
+        messageDiv.style.color = 'red'; // Mengubah warna teks menjadi merah
+      }
+    } catch (error) {
       messageDiv.style.display = 'block';
-      messageDiv.textContent = result.status; // Menampilkan pesan sukses
-      messageDiv.style.color = 'green'; // Mengubah warna teks menjadi hijau
-      this.reset(); // Mereset form setelah sukses
-    } else {
-      messageDiv.style.display = 'block';
-      messageDiv.textContent = result.message || 'Terjadi kesalahan, silakan coba lagi.'; // Menampilkan pesan error
+      messageDiv.textContent = 'Terjadi kesalahan saat mengirim data. Silakan coba lagi.'; // Menampilkan pesan error
       messageDiv.style.color = 'red'; // Mengubah warna teks menjadi merah
+    } finally {
+      // Mengembalikan teks tombol dan mengaktifkan kembali setelah selesai
+      submitButton.textContent = 'simpan';
+      submitButton.disabled = false; // Mengaktifkan kembali tombol
     }
   });
 </script>

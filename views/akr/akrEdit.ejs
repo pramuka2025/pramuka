@@ -1,10 +1,10 @@
 <div class="container">
-  <% if ( !akredetasi) {%>
+  <% if (!akredetasi) { %>
   <div></div>
-  <% } else {%>
+  <% } else { %>
   <div id="status-message" style="display: none"></div>
   <!-- Tempat untuk menampilkan status -->
-  <div id="data" data-id="<%= akredetasi._id  %>"></div>
+  <div id="data" data-id="<%= akredetasi._id %>"></div>
   <form id="edit-form" enctype="multipart/form-data">
     <div class="form-group">
       <label for="title">Judul:</label>
@@ -22,33 +22,55 @@
       <p>File Saat Ini: <a href="<%= akredetasi.link %>" target="_blank">Lihat File</a></p>
     </div>
 
-    <button type="submit">Simpan Perubahan</button>
+    <button type="submit" id="submitButton">Simpan Perubahan</button>
   </form>
   <% } %>
 </div>
+
 <script>
   document.getElementById('edit-form').addEventListener('submit', async function (event) {
     event.preventDefault(); // Mencegah pengiriman form default
+
     const id = document.getElementById('data');
     const idakr = id.getAttribute('data-id');
-    console.log(idakr);
     const formData = new FormData(this);
-    const response = await fetch(`/akredetasi/edit/${idakr}`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    const result = await response.json();
+    const submitButton = document.getElementById('submitButton');
     const statusMessage = document.getElementById('status-message');
 
-    if (response.ok) {
-      // Tampilkan status sukses
+    // Mengubah teks tombol menjadi "Loading..."
+    submitButton.textContent = 'Loading...';
+    submitButton.disabled = true; // Menonaktifkan tombol saat loading
+
+    try {
+      const response = await fetch(`/akredetasi/edit/${idakr}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Tampilkan status sukses
+        statusMessage.style.display = 'block';
+        statusMessage.innerHTML = `<p style="color: green;">${result.status}</p>`;
+
+        // Redirect ke halaman /dashboard setelah beberapa detik
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 2000);
+      } else {
+        // Tampilkan status error
+        statusMessage.style.display = 'block';
+        statusMessage.innerHTML = `<p style="color: red;">${result.message || 'Terjadi kesalahan'}</p>`;
+      }
+    } catch (error) {
+      // Tampilkan status error jika terjadi kesalahan saat fetch
       statusMessage.style.display = 'block';
-      statusMessage.innerHTML = `<p style="color: green;">${result.status}</p>`;
-    } else {
-      // Tampilkan status error
-      statusMessage.style.display = 'block';
-      statusMessage.innerHTML = `<p style="color: red;">${result.message || 'Terjadi kesalahan'}</p>`;
+      statusMessage.innerHTML = `<p style="color: red;">Terjadi kesalahan saat mengirim data. Silakan coba lagi.</p>`;
+    } finally {
+      // Mengembalikan teks tombol dan mengaktifkan kembali setelah selesai
+      submitButton.textContent = 'simpan';
+      submitButton.disabled = false; // Mengaktifkan kembali tombol
     }
   });
 </script>
