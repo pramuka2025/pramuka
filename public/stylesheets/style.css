@@ -57,11 +57,11 @@
   transition: background-color 0.3s ease, transform 0.3s ease; /* Transisi halus */
 }
 .text-ellipsis {
-  display: -webkit-box; /* Untuk WebKit (Chrome, Safari) */
-  -webkit-box-orient: vertical; /* Mengatur orientasi box menjadi vertikal */
-  -webkit-line-clamp: 1; /* Menentukan jumlah baris yang ditampilkan */
-  overflow: hidden; /* Menyembunyikan teks yang melampaui batas */
-  text-overflow: ellipsis; /* Menambahkan titik tiga di akhir teks */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .text-ellipsis-2 {
   display: -webkit-box;
@@ -73,30 +73,30 @@
   font-size: small;
 }
 .image-container {
-  position: relative; /* Menjadikan posisi relatif untuk overlay */
-  display: inline-block; /* Membuat kontainer inline */
+  position: relative;
+  display: inline-block;
 }
 .image-container img {
-  display: block; /* Menghilangkan jarak bawah pada gambar */
-  width: 100%; /* Mengatur lebar gambar sesuai kontainer */
-  height: auto; /* Mengatur tinggi gambar secara proporsional */
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .overlay {
-  position: absolute; /* Memposisikan overlay di atas gambar */
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.1); /* Hitam dengan opasitas 10% */
-  z-index: 1; /* Menempatkan overlay di depan gambar */
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 .overlay-solid {
-  position: absolute; /* Memposisikan overlay di atas gambar */
-  top: 0;
+  position: absolute;
+  top: 10%;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Hitam dengan opasitas 10% */
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
 }
 .text {
@@ -107,11 +107,15 @@
   color: white; /* Warna teks */
   z-index: 2; /* Menempatkan teks di atas overlay */
 }
+.text-2 {
+  position: absolute; /* Memposisikan teks di atas overlay */
+  top: 30%;
+  left: 50%;
+
+  transform: translate(-50%, -50%); /* Mengatur teks ke tengah */
+  color: white; /* Warna teks */
+  z-index: 2; /* Menempatkan teks di atas overlay */
+}
 .text-b {
   font-size: 12px;
-}
-
-.border-left {
-  border: 1px solid blue;
-  border-left: 4px solid var(--brown);
 }

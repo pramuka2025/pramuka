@@ -88,16 +88,17 @@
             <iframe src="<%= dat.link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
             <div class="overlay-solid"></div>
           </div>
-          <p class="fw-bold p-0 m-0 ps-1"><%= dat.category %></p>
-          <a class="p-0 m-0 ps-1" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
-
           <div class="card-body m-0 p-0 ps-2 pe-2">
             <div class="text text-center">
-              <p class="text-b"><%= dat.title %></p>
-              <div class="d-flex">
-                <img src="../images/drive.png" style="width: 37px; height: 37px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-4 me-2 text-danger"></i>
+              <p class="text-b text-ellipsis-2"><%= dat.title %></p>
+              <div class="d-flex justify-content-center">
+                <img src="../images/drive.png" style="width: 25px; height: 25px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-6 me-2 text-danger"></i>
                 <p><a class="text-b" target="_blank" href="<%= dat.link  %>">link</a></p>
               </div>
+            </div>
+            <div class="m-0 p-0">
+              <p class="p-0 m-0 text-b text-ellipsis"><%= dat.category %></p>
+              <a class="p-0 m-0 text-b" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
             </div>
           </div>
         </div>
@@ -144,12 +145,12 @@
   <% }else {%>
   <section>
     <div class="d-flex justify-content-center mb-1 mt-3">
-      <div class="fw-bold">STRUKTUR ORGANISASI GUGUS DEPAN PANGKALAN SDN DESAKOLOT :</div>
+      <div class="fw-bold text-center">STRUKTUR ORGANISASI GUGUS DEPAN PANGKALAN SDN DESAKOLOT :</div>
     </div>
     <div class="container">
       <div class="row m-3">
         <% data.partisipans.forEach((parti)=> { %>
-        <div class="col-12 border-left m-0 me-1 mb-1 p-0">
+        <div class="col-12 border border-primary m-0 me-1 mb-1 p-0">
           <div class="fw-bold bg-warning p-2 ps-2"><%= parti.title %></div>
           <% parti.peserta.forEach((peserta) => { %>
           <div class="p-2"><i class="bi bi-check-circle-fill text-success me-1"></i><%= peserta %></div>

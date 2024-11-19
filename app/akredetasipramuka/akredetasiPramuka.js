@@ -226,7 +226,8 @@ router.get('/akr/:category', authPublic, async (req, res) => {
   const { category } = req.params; // Ambil kategori dari URL
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'Akredetasi', url: '/allakredetasi' },
+    { name: 'Akredetasi', url: '/akredetasi/allakredetasi' },
+    { name: `${category}`, url: '/allakredetasi' },
   ];
 
   try {

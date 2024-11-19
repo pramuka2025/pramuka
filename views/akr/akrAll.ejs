@@ -18,17 +18,14 @@
             <iframe src="<%= dat.link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
             <div class="overlay-solid"></div>
           </div>
-          <p class="fw-bold m-0 p-0 ms-1"><%= dat.category %></p>
-          <p class="m-0 p-0 ms-1fw-bold text-dark mt-2"><a href="/akredetasi/akr/<%=dat.category %>">Lihat selengkap nya ...</a></p>
-
           <div class="card-body m-0 p-0 ps-2 pe-2">
-            <div class="text text-center">
-              <p class="text-b"><%=dat.title %></p>
-              <div class="d-flex">
-                <img src="../../images/drive.png" style="width: 37px; height: 37px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-4 me-2 text-danger"></i>
-                <p><a class="text-b" target="_blank" href="<%= dat.link  %>">link</a></p>
-              </div>
+            <div class="text-2 text-center">
+              <div class="d-flex justify-content-center"><img src="../../images/drive.png" style="width: 30px; height: 30px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-5 me-2 text-danger"></i></div>
             </div>
+            <p class="text-b fw-bold m-0 p-0 ms-1 mt-1"><%= dat.category %></p>
+            <hr style="padding: 0; margin: 0" />
+            <p class="text-b m-0 p-0 ms-1"><%=dat.title %></p>
+            <p><a class="text-b m-0 p-0 ms-1 mb-1" target="_blank" href="/akredetasi/akr/<%=dat.category %>">Lihat selengkap nya ...</a></p>
           </div>
         </div>
       </div>
