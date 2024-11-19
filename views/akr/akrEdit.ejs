@@ -1,0 +1,54 @@
+<div class="container">
+  <% if ( !akredetasi) {%>
+  <div></div>
+  <% } else {%>
+  <div id="status-message" style="display: none"></div>
+  <!-- Tempat untuk menampilkan status -->
+  <div id="data" data-id="<%= akredetasi._id  %>"></div>
+  <form id="edit-form" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="title">Judul:</label>
+      <input type="text" id="title" name="title" value="<%= akredetasi.title %>" required />
+    </div>
+
+    <div class="form-group">
+      <label for="category">Kategori:</label>
+      <input type="text" id="category" name="category" value="<%= akredetasi.category %>" required />
+    </div>
+
+    <div class="form-group">
+      <label for="image">Upload File Baru (PDF):</label>
+      <input type="file" id="image" name="image" accept="application/pdf" />
+      <p>File Saat Ini: <a href="<%= akredetasi.link %>" target="_blank">Lihat File</a></p>
+    </div>
+
+    <button type="submit">Simpan Perubahan</button>
+  </form>
+  <% } %>
+</div>
+<script>
+  document.getElementById('edit-form').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Mencegah pengiriman form default
+    const id = document.getElementById('data');
+    const idakr = id.getAttribute('data-id');
+    console.log(idakr);
+    const formData = new FormData(this);
+    const response = await fetch(`/akredetasi/edit/${idakr}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+    const statusMessage = document.getElementById('status-message');
+
+    if (response.ok) {
+      // Tampilkan status sukses
+      statusMessage.style.display = 'block';
+      statusMessage.innerHTML = `<p style="color: green;">${result.status}</p>`;
+    } else {
+      // Tampilkan status error
+      statusMessage.style.display = 'block';
+      statusMessage.innerHTML = `<p style="color: red;">${result.message || 'Terjadi kesalahan'}</p>`;
+    }
+  });
+</script>

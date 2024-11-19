@@ -6,11 +6,14 @@ const Doc = require('./documentation/documentationSchema');
 const Fiture = require('./fitures/featuresModel');
 const Partisipans = require('./partisipans/partisipansSchema');
 const Menu = require('./menu/menuSchema');
+// const Akredetasi = require('./akredetasi/akredetasiSchema');
+const Akredetasi = require('./akredetasipramuka/akredetasiPramukaSchema');
 const { auth, authPublic } = require('./auth');
 
 /* GET home page. */
 router.get('/', authPublic, async function (req, res, next) {
   const breadcrumb = [{ name: 'Home', url: '/' }];
+
   try {
     const landingpage = await LandingPage.find();
     const landing = landingpage ? landingpage : null;
@@ -18,11 +21,22 @@ router.get('/', authPublic, async function (req, res, next) {
     const fiture = await Fiture.find();
     const partisipans = await Partisipans.find();
     const menu = await Menu.find();
+    const akredetasiList = await Akredetasi.find();
+    const uniqueCategories = {};
+    akredetasiList.forEach((akredetasi) => {
+      if (!uniqueCategories[akredetasi.category]) {
+        uniqueCategories[akredetasi.category] = akredetasi; // Simpan akredetasi pertama untuk kategori ini
+      }
+    });
+
+    const filteredAkredetasi = Object.values(uniqueCategories);
+
     const data = {
       doc: doc || [], // Jika doc tidak ada, gunakan array kosong
       menu: menu || [], // Jika menu tidak ada, gunakan array kosong
       fiture: fiture || [], // Jika fiture tidak ada, gunakan array kosong
       partisipans: partisipans || [], // Jika partisipans tidak ada, gunakan array kosong
+      akredetasi: filteredAkredetasi || [], // Jika akredetasi tidak
     };
     res.render('home', { user: req.user, title: 'halaman home', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
   } catch (error) {
@@ -39,18 +53,24 @@ router.get('/dashboard', auth, async function (req, res, next) {
     { name: 'Home', url: '/' },
     { name: 'Dashboard', url: '/dashboard' },
   ];
+  if (!req.user.token || req.user.token === null) {
+    res.redirect('/');
+  }
   try {
     const landing = await LandingPage.find();
-    console.log(landing);
+
     const doc = await Doc.find();
     const fiture = await Fiture.find();
     const partisipans = await Partisipans.find();
     const menu = await Menu.find();
+
+    const akredetasi = await Akredetasi.find();
     const data = {
       doc: doc,
       menu: menu,
       fiture: fiture,
       partisipans,
+      akredetasi: akredetasi,
     };
     res.render('dashboard', { user: req.user, title: 'Halaman Dashboard', data, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
@@ -121,6 +141,25 @@ router.get('/galery', authPublic, async function (req, res, next) {
   }
 });
 
+router.get('/allakredetasi', authPublic, async function (req, res, next) {
+  const breadcrumb = [
+    { name: 'Home', url: '/' },
+    { name: 'All akredetasi', url: '/allakredetasi' },
+  ];
+  try {
+    const landing = await LandingPage.find();
+    const akredetasi = await Akredetasi.find();
+    res.render('akredetasiView/akredetasiAll', { user: req.user, title: 'Akredetasi', akredetasi, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal Server Error',
+      error,
+    });
+  }
+});
+
 router.get('/about', authPublic, async function (req, res, next) {
   const breadcrumb = [
     { name: 'Home', url: '/' },
@@ -138,4 +177,5 @@ router.get('/about', authPublic, async function (req, res, next) {
     });
   }
 });
+
 module.exports = router;

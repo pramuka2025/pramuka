@@ -15,6 +15,8 @@ const documentRouter = require('./app/documentation/documentation');
 const partisipansRouter = require('./app/partisipans/partisipans');
 const landingPageRouter = require('./app/landingpage/landing');
 const menuRouter = require('./app/menu/menurouter');
+// const akredetasiRouter = require('./app/akredetasi/akredetasi');
+const akredetasiRouter = require('./app/akredetasipramuka/akredetasiPramuka');
 const indexRouter = require('./app/index');
 
 // Initialize Express application
@@ -27,7 +29,7 @@ const uri = process.env.MONGO_URI;
 mongoose
   .connect(uri)
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('Connected');
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);
@@ -51,6 +53,7 @@ app.use('/fitures', fituresRouter);
 app.use('/doc', documentRouter);
 app.use('/partisipans', partisipansRouter);
 app.use('/menu', menuRouter);
+app.use('/akredetasi', akredetasiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

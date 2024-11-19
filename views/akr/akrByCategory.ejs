@@ -1,0 +1,22 @@
+<div class="container">
+  <% if(!akredetasi) {%>
+  <div class=""></div>
+  <% }else {%>
+  <div class="text-center mb-2 fw-bold"><%= category %></div>
+  <hr />
+  <div class="row p-2">
+    <div class="container text-center">
+      <% akredetasi.forEach((data) => {%>
+      <div class="col-12 border border-primary shadow p-2 mb-2">
+        <div class="d-flex align-items-center">
+          <img src="../../images/drive.png" style="width: 50px; height: 50px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-2 text-danger"></i>
+          <h1 id="<%= data._id %>" class="fs-6 fw-bold"><%= data.title %></h1>
+        </div>
+        <a class="mb-1" href="<%= data.link %>" target="_blank">klik disini untuk membuka...!</a>
+        <iframe class="w-100" style="height: 300px" src="<%= data.link %>"></iframe>
+      </div>
+      <% } )%>
+    </div>
+  </div>
+  <% } %>
+</div>

@@ -3,7 +3,7 @@
     <div class="mt-2 mb-2">
       <div class="d-flex justify-content-between">
         <% if(!landing){ %>
-        <p class="alert alert-warning">Tidak ada Landing Page!</p>
+        <p class="alert alert-warning"></p>
         <% }else{ %>
 
         <h1 class="fs-3 pt-3"><%= landing.description %></h1>
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="row w-100">
-      <% data.doc.reverse().slice(0, 5).forEach(dat => { %>
+      <% data.doc.reverse().slice(0, 4).forEach(dat => { %>
       <div class="col-6 m-0 p-2">
         <div class="card border-1 border-brown pointer" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
           <div class="position-relative">
@@ -63,6 +63,42 @@
           <div class="card-body m-0 p-0 ps-2 pe-2">
             <p class="card-text text-b m-0 p-0 text-ellipsis"><%= dat.title %></p>
             <p class="card-text text-b m-0 p-0 text-ellipsis text-muted"><%= dat.createdAt %></p>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+  <!-- akredetasi -->
+  <% } %> <% if (data.akredetasi.length === 0) { %>
+  <div></div>
+  <% } else { %>
+  <section>
+    <div class="d-flex justify-content-between mb-2 mt-2">
+      <div class="fw-bold">Akredetasi :</div>
+      <div class="">
+        <a href="/akredetasi/allakredetasi" class="text-decoration-none">Lainnya..</a>
+      </div>
+    </div>
+    <div class="row w-100">
+      <% data.akredetasi.reverse().slice(0, 4).forEach(dat => { %>
+      <div class="col-6 m-0 p-2">
+        <div class="card border-1 border-brown pointer" style="min-height: 140px">
+          <div class="position-relative">
+            <iframe src="<%= dat.link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
+            <div class="overlay-solid"></div>
+          </div>
+          <p class="fw-bold p-0 m-0 ps-1"><%= dat.category %></p>
+          <a class="p-0 m-0 ps-1" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
+
+          <div class="card-body m-0 p-0 ps-2 pe-2">
+            <div class="text text-center">
+              <p class="text-b"><%= dat.title %></p>
+              <div class="d-flex">
+                <img src="../images/drive.png" style="width: 37px; height: 37px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-4 me-2 text-danger"></i>
+                <p><a class="text-b" target="_blank" href="<%= dat.link  %>">link</a></p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -108,7 +144,7 @@
   <% }else {%>
   <section>
     <div class="d-flex justify-content-center mb-1 mt-3">
-      <div class="fw-bold">Majelis Pembibing Gugus Depan :</div>
+      <div class="fw-bold">STRUKTUR ORGANISASI GUGUS DEPAN PANGKALAN SDN DESAKOLOT :</div>
     </div>
     <div class="container">
       <div class="row m-3">

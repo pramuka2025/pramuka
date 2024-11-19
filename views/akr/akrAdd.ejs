@@ -1,0 +1,49 @@
+<main>
+  <h2>Form Tambah Akredetasi</h2>
+  <div id="message" class="alert" style="display: none"></div>
+  <!-- Tempat untuk menampilkan pesan -->
+
+  <form id="akredetasiForm" enctype="multipart/form-data">
+    <div>
+      <label for="title">Judul:</label>
+      <input type="text" id="title" name="title" required />
+    </div>
+    <div>
+      <label for="category">Kategori:</label>
+      <input type="text" id="category" name="category" required />
+    </div>
+    <div>
+      <label for="image">File (PDF):</label>
+      <input type="file" id="image" name="image" accept="application/pdf" required />
+    </div>
+    <div>
+      <button type="submit">Simpan</button>
+    </div>
+  </form>
+</main>
+
+<script>
+  document.getElementById('akredetasiForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Mencegah pengiriman form default
+
+    const formData = new FormData(this);
+    const response = await fetch('/akredetasi/add', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+    const messageDiv = document.getElementById('message');
+
+    if (response.ok) {
+      messageDiv.style.display = 'block';
+      messageDiv.textContent = result.status; // Menampilkan pesan sukses
+      messageDiv.style.color = 'green'; // Mengubah warna teks menjadi hijau
+      this.reset(); // Mereset form setelah sukses
+    } else {
+      messageDiv.style.display = 'block';
+      messageDiv.textContent = result.message || 'Terjadi kesalahan, silakan coba lagi.'; // Menampilkan pesan error
+      messageDiv.style.color = 'red'; // Mengubah warna teks menjadi merah
+    }
+  });
+</script>
