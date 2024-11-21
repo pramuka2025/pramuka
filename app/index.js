@@ -54,7 +54,7 @@ router.get('/', authPublic, async function (req, res, next) {
       akredetasi: filteredAkredetasi || [], // Jika akredetasi tidak
       categoryCounts: categoryCountsArray || [], // Jika categoryCounts tidak ada, gunakan array kosong
     };
-    res.render('home', { user: req.user, title: 'Pramuka SDN Desakolot - Pendidikan dan Kegiatan Pramuka untuk Anak-anak', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
+    res.render('home', { user: req.user, title: 'SDN Desakolot - Pendidikan dan Kegiatan Pramuka untuk Anak-anak', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -145,7 +145,7 @@ router.get('/galery', authPublic, async function (req, res, next) {
   ];
   try {
     const landing = await LandingPage.find();
-    const doc = await Doc.find();
+    const doc = await Doc.find().sort({ createdAt: -1 }).limit(4);
     res.render('doc/allGalery', { user: req.user, title: 'Galeri Kegiatan Pramuka SDN Desakolot - Dokumentasi dan Momen Berharga', doc, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
     console.log(error);
@@ -156,25 +156,6 @@ router.get('/galery', authPublic, async function (req, res, next) {
     });
   }
 });
-
-// router.get('/allakredetasi', authPublic, async function (req, res, next) {
-//   const breadcrumb = [
-//     { name: 'Home', url: '/' },
-//     { name: 'All akredetasi', url: '/allakredetasi' },
-//   ];
-//   try {
-//     const landing = await LandingPage.find();
-//     const akredetasi = await Akredetasi.find();
-//     res.render('akredetasiView/akredetasiAll', { user: req.user, title: 'Akredetasi', akredetasi, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({
-//       status: 'error',
-//       message: 'Internal Server Error',
-//       error,
-//     });
-//   }
-// });
 
 router.get('/about', authPublic, async function (req, res, next) {
   const breadcrumb = [
@@ -194,4 +175,37 @@ router.get('/about', authPublic, async function (req, res, next) {
   }
 });
 
+router.get('/error', (req, res) => {
+  const returnTo = req.session.returnTo || '/'; // Jika tidak ada, kembali ke beranda
+  // Jangan hapus session returnTo di sini, agar tetap ada setelah refresh
+  res.send(`
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+            <title>Terjadi Kesalahan</title>
+        </head>
+        <body>
+            <div class="container d-flex justify-content-center align-items-center vh-100">
+                <div class="text-center d-block">
+                    <h6 class="bg-dark p-2 text-white fw-bold">SDN DESAKOLOT</h6>
+                    <p class="lead">Maaf, terjadi kesalahan saat memproses permintaan Anda.</p>
+                    <div><a href="/" class=" mb-1">Kembali ke Beranda</a> </div>
+                    <div>
+                    <a href="${returnTo}" class=" mb-1">Kembali ke Halaman Sebelumnya</a>
+                    </div>
+                    <div>
+                    <a onclick="window.location.reload();" class="">Refresh Halaman</a>
+                    </div>
+                </div>
+            </div>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </body>
+        </html>
+    `);
+});
 module.exports = router;

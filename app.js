@@ -2,6 +2,8 @@
 require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
+
+const session = require('express-session');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -27,13 +29,25 @@ const mongoose = require('mongoose');
 const uri = process.env.MONGO_URI;
 
 mongoose
-  .connect(uri)
+  .connect(uri, {
+    serverSelectionTimeoutMS: 45000, // Waktu maksimum untuk memilih server
+    socketTimeoutMS: 55000,
+  })
   .then(() => {
     console.log('Connected');
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);
   });
+
+app.use(
+  session({
+    secret: 'your-secret-key', // Ganti dengan kunci rahasia Anda
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }, // Set ke true jika menggunakan HTTPS
+  })
+);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 // view engine setup
