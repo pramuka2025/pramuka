@@ -13,7 +13,7 @@
     <textarea id="about" name="about" required><%= landing.about %></textarea>
 
     <label class="mt-1" for="description">Description:</label>
-    <textarea id="description" name="description" style="height: 400px" required><%= landing.description %></textarea>
+    <textarea id="description" name="description" required><%= landing.description %></textarea>
 
     <h2>Hero Section</h2>
 
@@ -58,13 +58,23 @@
   <% } %>
 </div>
 
+<script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+  tinymce.init({
+    selector: '#about',
+    plugins: 'lists link image table',
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | table',
+    menubar: true,
+    height: 300,
+  });
   document.getElementById('submitBtn').addEventListener('click', async () => {
     const form = document.getElementById('editForm');
+
+    const about = tinymce.get('about').getContent();
     const landingIdElement = document.getElementById('landingId');
     const landingId = JSON.parse(landingIdElement.getAttribute('data-landing'));
     const formData = new FormData(form);
-
+    formData.set('about', about);
     // Validasi sederhana
     let isValid = true;
     formData.forEach((value, key) => {

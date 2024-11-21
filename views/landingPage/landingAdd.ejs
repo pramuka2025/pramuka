@@ -9,7 +9,7 @@
       <input type="text" id="title" name="title" required />
 
       <label class="mt-1" for="about">Tentang:</label>
-      <textarea id="about" name="about" style="height: 400px" required></textarea>
+      <textarea id="about" name="about" required></textarea>
 
       <label class="mt-1" for="description">Description:</label>
       <textarea id="description" name="description" required></textarea>
@@ -55,14 +55,22 @@
     <a href="/dashboard">Back To Dashboard</a>
   </div>
 </div>
-
+<script src="https://cdn.tiny.cloud/1/99mw3o6b0762hami5kgurnk6fz2kwxaetpu0xeq06io9j7fw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+  tinymce.init({
+    selector: '#about',
+    plugins: 'lists link image table',
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | table',
+    menubar: true,
+    height: 300,
+  });
   document.getElementById('landingPageForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // Prevent the default form submission
 
+    const about = tinymce.get('about').getContent();
     const responseMessage = document.getElementById('responseMessage');
     const formData = new FormData(this); // Create a FormData object from the form
-
+    formData.set('about', about);
     // Check if all required fields are filled
     if (!formData.get('title') || !formData.get('about') || !formData.get('description') || !formData.get('heroImage') || !formData.get('heroImageAlt') || !formData.get('email') || !formData.get('phone') || !formData.get('address')) {
       responseMessage.classList.add = 'alert alert-danger';

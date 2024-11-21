@@ -26,6 +26,25 @@
     </div>
   </section>
   <hr class="bg-primary" style="height: 3px" />
-  <p><%= landing.about %></p>
+  <div class="container"><%- landing.about %></div class="container">
+  <div class="ms-2">
+    <table class="table table-bordered table-dark">
+      <thead></thead>
+      <tbody class="text-dark">
+        <tr>
+          <th scope="row">Email:</th>
+          <td><%=landing.footer.contact.email %></td>
+        </tr>
+        <tr>
+          <th scope="row">Phone:</th>
+          <td><%=landing.footer.contact.phone %></td>
+        </tr>
+        <tr>
+          <th scope="row">Adress:</th>
+          <td><%=landing.footer.contact.address %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <% } %>
 </div>

@@ -21,9 +21,13 @@ const auth = async (req, res, next) => {
 
 const authPublic = async (req, res, next) => {
   try {
-    const user = await User.find(); // Mengambil pengguna dari database
+    const user = {
+      email: 'public@gmail.com',
+      password: 'sdpramuka',
+      token: '',
+    };
 
-    req.user = user[0]; // Anda bisa menyimpan seluruh objek pengguna atau hanya yang diperlukan
+    req.user = user; // Anda bisa menyimpan seluruh objek pengguna atau hanya yang diperlukan
 
     next(); // Lanjutkan ke middleware atau rute berikutnya
   } catch (error) {

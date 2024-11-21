@@ -71,7 +71,7 @@ async function deleteFile(auth, fileId) {
 router.get('/add', authRoot, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'Akredetasi', url: '/allakredetasi' },
+    { name: 'Akredetasi', url: '/akredetasi/allakredetasi' },
     { name: 'Add', url: '/akredetasi' },
   ];
   const landing = await LandingPage.find();
@@ -114,7 +114,7 @@ router.post('/add', authRoot, upload.single('image'), async (req, res) => {
 router.get('/edit/:id', authRoot, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'Akredetasi', url: '/allakredetasi' },
+    { name: 'Akredetasi', url: '/akredetasi/allakredetasi' },
     { name: 'Edit', url: '/' },
   ];
   try {
@@ -186,7 +186,7 @@ router.post('/edit/:id', authRoot, upload.single('image'), async (req, res) => {
 router.get('/allakredetasi', authPublic, async (req, res) => {
   const breadcrumb = [
     { name: 'Home', url: '/' },
-    { name: 'Akredetasi', url: '/allakredetasi' },
+    { name: 'Akredetasi', url: '/akredetasi/allakredetasi' },
   ];
   try {
     // Ambil semua data akredetasi
@@ -196,15 +196,27 @@ router.get('/allakredetasi', authPublic, async (req, res) => {
 
     // Mengelompokkan data berdasarkan kategori tanpa duplikat
     const uniqueCategories = {};
+    const categoryCounts = {};
     akredetasiList.forEach((akredetasi) => {
-      if (!uniqueCategories[akredetasi.category]) {
-        uniqueCategories[akredetasi.category] = akredetasi; // Simpan akredetasi pertama untuk kategori ini
+      const category = akredetasi.category;
+
+      // Jika kategori belum ada, inisialisasi dengan akreditasi pertama
+      if (!uniqueCategories[category]) {
+        uniqueCategories[category] = akredetasi; // Simpan akredetasi pertama untuk kategori ini
+        categoryCounts[category] = 0; // Inisialisasi jumlah kategori
       }
+
+      // Tambahkan 1 untuk setiap akreditasi yang ditemukan di kategori ini
+      categoryCounts[category] += 1;
     });
 
     // Mengubah objek menjadi array
     const filteredAkredetasi = Object.values(uniqueCategories);
-
+  // Mengubah objek categoryCounts menjadi array
+  const categoryCountsArray = Object.keys(categoryCounts).map((category) => ({
+    category,
+    count: categoryCounts[category],
+  }));
     // Render halaman dengan data yang telah difilter
     res.render('akr/akrAll', {
       akredetasi: filteredAkredetasi,
@@ -212,15 +224,21 @@ router.get('/allakredetasi', authPublic, async (req, res) => {
       landing: landing[0],
       isRoot: false,
       layout: 'index',
-      title: 'Akredetasi',
+      title: 'Akreditasi Pramuka SDN Desakolot - Standar Pendidikan dan Pengakuan Resmi',
       breadcrumb,
       message: null,
+      categoryCounts: categoryCountsArray,
     });
   } catch (error) {
     console.error(error);
     res.status(500).send('Terjadi kesalahan saat mengambil data akredetasi');
   }
 });
+
+function extractNumber(data) {
+  const match = data.title.match(/^\d+(\.\d+)?/);
+  return match ? parseFloat(match[0]) : Infinity; // Mengembalikan Infinity jika tidak ada angka di depan
+}
 
 router.get('/akr/:category', authPublic, async (req, res) => {
   const { category } = req.params; // Ambil kategori dari URL
@@ -235,7 +253,8 @@ router.get('/akr/:category', authPublic, async (req, res) => {
     const akredetasiList = await Akredetasi.find({ category: category });
 
     const landing = await LandingPage.find();
-    // Render halaman dengan data akredetasi yang ditemukan
+    akredetasiList.sort((a, b) => extractNumber(a) - extractNumber(b));
+
     res.render('akr/akrByCategory', {
       akredetasi: akredetasiList,
       category: category,
@@ -243,7 +262,7 @@ router.get('/akr/:category', authPublic, async (req, res) => {
       landing: landing[0],
       isRoot: false,
       layout: 'index',
-      title: 'Akredetasi',
+      title: `Akreditasi Pramuka SDN Desakolot - ${category}`,
       breadcrumb,
       message: null,
     });

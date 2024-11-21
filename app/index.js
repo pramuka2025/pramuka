@@ -23,13 +23,27 @@ router.get('/', authPublic, async function (req, res, next) {
     const menu = await Menu.find();
     const akredetasiList = await Akredetasi.find();
     const uniqueCategories = {};
+    const categoryCounts = {};
     akredetasiList.forEach((akredetasi) => {
-      if (!uniqueCategories[akredetasi.category]) {
-        uniqueCategories[akredetasi.category] = akredetasi; // Simpan akredetasi pertama untuk kategori ini
+      const category = akredetasi.category;
+
+      // Jika kategori belum ada, inisialisasi dengan akreditasi pertama
+      if (!uniqueCategories[category]) {
+        uniqueCategories[category] = akredetasi; // Simpan akredetasi pertama untuk kategori ini
+        categoryCounts[category] = 0; // Inisialisasi jumlah kategori
       }
+
+      // Tambahkan 1 untuk setiap akreditasi yang ditemukan di kategori ini
+      categoryCounts[category] += 1;
     });
 
+    // Mengubah objek menjadi array
     const filteredAkredetasi = Object.values(uniqueCategories);
+    // Mengubah objek categoryCounts menjadi array
+    const categoryCountsArray = Object.keys(categoryCounts).map((category) => ({
+      category,
+      count: categoryCounts[category],
+    }));
 
     const data = {
       doc: doc || [], // Jika doc tidak ada, gunakan array kosong
@@ -37,8 +51,10 @@ router.get('/', authPublic, async function (req, res, next) {
       fiture: fiture || [], // Jika fiture tidak ada, gunakan array kosong
       partisipans: partisipans || [], // Jika partisipans tidak ada, gunakan array kosong
       akredetasi: filteredAkredetasi || [], // Jika akredetasi tidak
+      akredetasi: filteredAkredetasi || [], // Jika akredetasi tidak
+      categoryCounts: categoryCountsArray || [], // Jika categoryCounts tidak ada, gunakan array kosong
     };
-    res.render('home', { user: req.user, title: 'halaman home', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
+    res.render('home', { user: req.user, title: 'Pramuka SDN Desakolot - Pendidikan dan Kegiatan Pramuka untuk Anak-anak', layout: 'index', data, landing: landing[0], breadcrumb, isRoot: true });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -92,7 +108,7 @@ router.get('/info/:id', authPublic, async function (req, res, next) {
   try {
     const landing = await LandingPage.find();
     const fiture = await Fiture.findById(req.params.id);
-    res.render('fitures/info', { user: req.user, title: 'info & artikel pramuka', fiture, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+    res.render('fitures/info', { user: req.user, title: `${fiture.title}`, fiture, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -111,7 +127,7 @@ router.get('/allinfo', authPublic, async function (req, res, next) {
   try {
     const landing = await LandingPage.find();
     const fiture = await Fiture.find();
-    res.render('fitures/allInfo', { user: req.user, title: 'info & artikel pramuka', fiture, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+    res.render('fitures/allInfo', { user: req.user, title: 'Informasi Pramuka SDN Desakolot - Berita, Kegiatan, dan Pengumuman Terbaru', fiture, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -130,7 +146,7 @@ router.get('/galery', authPublic, async function (req, res, next) {
   try {
     const landing = await LandingPage.find();
     const doc = await Doc.find();
-    res.render('doc/allGalery', { user: req.user, title: 'Galery Foto Pramuka', doc, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+    res.render('doc/allGalery', { user: req.user, title: 'Galeri Kegiatan Pramuka SDN Desakolot - Dokumentasi dan Momen Berharga', doc, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -141,24 +157,24 @@ router.get('/galery', authPublic, async function (req, res, next) {
   }
 });
 
-router.get('/allakredetasi', authPublic, async function (req, res, next) {
-  const breadcrumb = [
-    { name: 'Home', url: '/' },
-    { name: 'All akredetasi', url: '/allakredetasi' },
-  ];
-  try {
-    const landing = await LandingPage.find();
-    const akredetasi = await Akredetasi.find();
-    res.render('akredetasiView/akredetasiAll', { user: req.user, title: 'Akredetasi', akredetasi, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal Server Error',
-      error,
-    });
-  }
-});
+// router.get('/allakredetasi', authPublic, async function (req, res, next) {
+//   const breadcrumb = [
+//     { name: 'Home', url: '/' },
+//     { name: 'All akredetasi', url: '/allakredetasi' },
+//   ];
+//   try {
+//     const landing = await LandingPage.find();
+//     const akredetasi = await Akredetasi.find();
+//     res.render('akredetasiView/akredetasiAll', { user: req.user, title: 'Akredetasi', akredetasi, landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal Server Error',
+//       error,
+//     });
+//   }
+// });
 
 router.get('/about', authPublic, async function (req, res, next) {
   const breadcrumb = [
@@ -167,7 +183,7 @@ router.get('/about', authPublic, async function (req, res, next) {
   ];
   try {
     const landing = await LandingPage.find();
-    res.render('about', { user: req.user, title: 'Halaman About', landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
+    res.render('about', { user: req.user, title: 'Tentang SDN Desakolot Pramuka - Misi, Visi, dan Kegiatan Pramuka', landing: landing[0], breadcrumb, isRoot: false, layout: 'index' });
   } catch (error) {
     console.log(error);
     res.status(500).json({

@@ -54,7 +54,7 @@
     </div>
     <div class="row w-100">
       <% data.doc.reverse().slice(0, 4).forEach(dat => { %>
-      <div class="col-6 m-0 p-2">
+      <div class="col-6 p-1">
         <div class="card border-1 border-brown pointer" style="min-height: 140px" onclick="showModal('<%= dat.title %>', '<%= dat.description %>', '<%= dat.imageUrl %>','<%= dat.createdAt %>')">
           <div class="position-relative">
             <img src="<%= dat.imageUrl %>" class="card-img-top" style="object-fit: cover; height: 150px" alt="<%= dat.title %>" />
@@ -85,23 +85,24 @@
     </div>
     <div class="row w-100">
       <% data.akredetasi.slice(0, 4).forEach(dat => { %>
-      <div class="col-6 m-0 p-2">
-        <div class="card border-1 border-brown pointer" style="min-height: 140px">
+      <div class="col-6 p-1">
+        <div class="card border-1 border-brown pointer" style="height: 250px !important">
           <div class="position-relative">
             <% let link = convertToPreviewLink(dat.link) %>
             <iframe src="<%= link %>" class="card-img-top" style="object-fit: cover; height: 150px"></iframe>
-            <div class="overlay-solid"></div>
           </div>
           <div class="card-body m-0 p-0 ps-2 pe-2">
             <div class="text text-center">
-              <p class="text-b text-ellipsis-2"><%= dat.title %></p>
+              <p class="text-b text-dark text-ellipsis-2"><%= dat.title %></p>
               <div class="d-flex justify-content-center">
                 <img src="../images/drive.png" style="width: 25px; height: 25px" alt="logo g drive" /><i class="bi bi-filetype-pdf fs-6 me-2 text-danger"></i>
                 <p><a class="text-b" target="_blank" href="<%= dat.link  %>">preview..!</a></p>
               </div>
             </div>
-            <p class="p-0 m-0 text-b text-ellipsis mt-1"><%= dat.category %></p>
-            <a class="p-0 m-0 text-b mb-1" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
+            <p class="p-0 m-0 text-b text-ellipsis-2 mt-1"><%= dat.category %></p>
+            <hr style="padding: 0; margin: 0" />
+            <a class="p-0 m-0 text-b" href="/akredetasi/akr/<%= dat.category %>">Lihat selengkapnya...!</a>
+            <p class="text-b m-0 p-0 mb-1 text-muted"><%= data.categoryCounts.find(cat => cat.category === dat.category)?.count || 0 %> data</p>
           </div>
         </div>
       </div>
